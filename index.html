@@ -3,1563 +3,1000 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS — 500 Category App Universe</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>NEXUS — 500 App Universe</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #020408;
-    --surface: #080f1a;
-    --card: #0d1b2e;
-    --border: #1a3a5c;
-    --accent: #00f5ff;
-    --accent2: #ff006e;
-    --accent3: #7c3aed;
-    --gold: #ffd700;
-    --text: #e2f4ff;
-    --muted: #5a8aaa;
-    --glow: 0 0 20px rgba(0,245,255,0.4);
-    --glow2: 0 0 20px rgba(255,0,110,0.4);
-  }
+:root{
+  --bg:#020408;--surface:#080f1a;--card:#0d1b2e;
+  --border:#1a3a5c;--accent:#00f5ff;--accent2:#ff006e;
+  --accent3:#7c3aed;--gold:#ffd700;--text:#e2f4ff;--muted:#5a8aaa;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* GRID BG */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,245,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,255,.03) 1px,transparent 1px);
+  background-size:60px 60px;z-index:0;pointer-events:none;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:1000;
+  background:rgba(2,4,8,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+}
+.hdr{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;gap:12px;height:60px;
+}
+.logo{
+  font-family:'Orbitron',monospace;font-size:clamp(16px,3vw,24px);font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  white-space:nowrap;flex-shrink:0;
+}
+.search-wrap{flex:1;position:relative}
+.search-wrap input{
+  width:100%;background:var(--card);border:1px solid var(--border);
+  color:var(--text);padding:9px 16px 9px 40px;border-radius:25px;
+  font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;
+  transition:border-color .3s,box-shadow .3s;
+}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 15px rgba(0,245,255,.25)}
+.search-wrap::before{
+  content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:14px;pointer-events:none;
+}
+.hdr-stats{display:flex;gap:16px;flex-shrink:0}
+.hdr-stat{text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+.hdr-stat b{display:block;color:var(--accent);font-size:13px}
+@media(max-width:500px){.hdr-stats{display:none}}
 
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed; width: 12px; height: 12px;
-    background: var(--accent); border-radius: 50%;
-    pointer-events: none; z-index: 99999;
-    transform: translate(-50%,-50%);
-    transition: transform 0.1s, background 0.2s;
-    box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent);
-  }
-  .cursor-ring {
-    position: fixed; width: 36px; height: 36px;
-    border: 2px solid var(--accent); border-radius: 50%;
-    pointer-events: none; z-index: 99998;
-    transform: translate(-50%,-50%);
-    transition: transform 0.15s ease, width 0.2s, height 0.2s, opacity 0.2s;
-    opacity: 0.6;
-  }
+/* FILTERS */
+.filters{
+  position:sticky;top:60px;z-index:999;
+  background:rgba(2,4,8,.92);backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(26,58,92,.4);
+  padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.flabel{font-family:'Orbitron',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;flex-shrink:0}
+.fbtn{
+  padding:5px 14px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-family:'Rajdhani',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.5px;
+}
+.fbtn:hover,.fbtn.on{border-color:var(--accent);color:var(--accent);background:rgba(0,245,255,.08)}
+.fbtn.mob.on{border-color:var(--accent2);color:var(--accent2);background:rgba(255,0,110,.08)}
 
-  /* BACKGROUND PARTICLES */
-  #particles {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%; z-index: 0;
-    pointer-events: none;
-  }
+/* MAIN */
+main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px 16px 60px}
 
-  /* GRID OVERLAY */
-  body::before {
-    content: '';
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-image:
-      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: 0; pointer-events: none;
-    animation: gridPulse 4s ease-in-out infinite;
-  }
-  @keyframes gridPulse {
-    0%,100% { opacity: 0.5; }
-    50% { opacity: 1; }
-  }
+/* CATEGORY PLACEHOLDER — shown before lazy load */
+.cat-block{margin-bottom:50px;contain:layout style}
 
-  /* HEADER */
-  header {
-    position: sticky; top: 0; z-index: 1000;
-    background: rgba(2,4,8,0.92);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-  }
-  .header-inner {
-    max-width: 1600px; margin: 0 auto;
-    display: flex; align-items: center;
-    gap: 20px; height: 70px;
-    flex-wrap: wrap;
-  }
-  .logo {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(18px,3vw,28px);
-    font-weight: 900;
-    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: logoGlow 3s ease-in-out infinite;
-    white-space: nowrap;
-  }
-  @keyframes logoGlow {
-    0%,100% { filter: drop-shadow(0 0 8px rgba(0,245,255,0.8)); }
-    50% { filter: drop-shadow(0 0 20px rgba(255,0,110,0.8)); }
-  }
-  .search-bar {
-    flex: 1; min-width: 200px;
-    position: relative;
-  }
-  .search-bar input {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 20px 10px 45px;
-    border-radius: 30px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  .search-bar input:focus {
-    border-color: var(--accent);
-    box-shadow: var(--glow);
-  }
-  .search-bar::before {
-    content: '⌖'; position: absolute;
-    left: 15px; top: 50%; transform: translateY(-50%);
-    color: var(--accent); font-size: 20px; z-index: 1;
-  }
-  .header-stats {
-    display: flex; gap: 15px; font-family: 'Space Mono', monospace;
-    font-size: 11px; color: var(--muted);
-  }
-  .stat { text-align: center; }
-  .stat-num { color: var(--accent); font-size: 14px; font-weight: 700; }
+.cat-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;padding-bottom:12px;
+  border-bottom:1px solid rgba(26,58,92,.4);
+}
+.cat-ico{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.cat-info{flex:1;min-width:0}
+.cat-num{font-family:'Space Mono',monospace;font-size:9px;color:rgba(0,245,255,.3);letter-spacing:2px}
+.cat-name{font-family:'Orbitron',monospace;font-size:clamp(11px,2vw,15px);font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-sub{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace}
+.cat-badge{
+  padding:3px 10px;border-radius:20px;font-size:10px;
+  font-weight:700;font-family:'Space Mono',monospace;flex-shrink:0;
+}
+.bm{background:rgba(255,0,110,.12);border:1px solid var(--accent2);color:var(--accent2)}
+.bl{background:rgba(0,245,255,.12);border:1px solid var(--accent);color:var(--accent)}
 
-  /* FILTER TABS */
-  .filter-bar {
-    position: sticky; top: 70px; z-index: 999;
-    background: rgba(2,4,8,0.9);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(26,58,92,0.5);
-    padding: 12px 20px;
-    display: flex; gap: 10px; flex-wrap: wrap;
-    align-items: center;
-  }
-  .filter-label {
-    font-family: 'Orbitron', monospace;
-    font-size: 10px; color: var(--muted);
-    letter-spacing: 2px;
-  }
-  .filter-btn {
-    padding: 6px 18px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
-    letter-spacing: 1px;
-  }
-  .filter-btn:hover, .filter-btn.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: rgba(0,245,255,0.08);
-    box-shadow: var(--glow);
-  }
-  .filter-btn.mobile.active {
-    border-color: var(--accent2);
-    color: var(--accent2);
-    background: rgba(255,0,110,0.08);
-    box-shadow: var(--glow2);
-  }
+/* APPS GRID */
+.apps-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:10px;
+}
+@media(max-width:480px){
+  .apps-grid{grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:7px}
+}
 
-  /* MAIN LAYOUT */
-  main {
-    position: relative; z-index: 1;
-    max-width: 1600px; margin: 0 auto;
-    padding: 30px 20px;
-  }
+/* APP CARD */
+.app-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:14px 8px 10px;
+  text-align:center;cursor:pointer;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+  will-change:transform;
+}
+.app-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(0,245,255,.06));
+  opacity:0;transition:opacity .25s;
+}
+.app-card:hover{
+  transform:translateY(-6px) scale(1.04);
+  border-color:var(--accent);
+  box-shadow:0 12px 30px rgba(0,245,255,.18);
+}
+.app-card:hover::after{opacity:1}
+.app-card:active{transform:scale(.97)}
 
-  /* CATEGORY SECTION */
-  .category-section {
-    margin-bottom: 60px;
-    animation: fadeInUp 0.6s ease both;
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.a-icon{
+  width:50px;height:50px;border-radius:12px;
+  margin:0 auto 9px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;transition:transform .25s;
+}
+.app-card:hover .a-icon{transform:scale(1.2) rotate(8deg)}
+.a-name{font-size:11px;font-weight:700;color:var(--text);line-height:1.3;transition:color .2s}
+.app-card:hover .a-name{color:var(--accent)}
+.a-type{font-size:9px;color:var(--muted);margin-top:3px;font-family:'Space Mono',monospace}
+.a-stars{font-size:9px;color:var(--gold);margin-top:3px}
 
-  .category-header {
-    display: flex; align-items: center;
-    gap: 15px; margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(26,58,92,0.5);
-    position: relative;
-  }
-  .category-header::after {
-    content: ''; position: absolute; bottom: -1px; left: 0;
-    width: 0; height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    transition: width 1s ease;
-  }
-  .category-section:hover .category-header::after { width: 100%; }
+/* SKELETON placeholder cards */
+.skel{
+  background:linear-gradient(90deg,var(--card) 25%,#0f2030 50%,var(--card) 75%);
+  background-size:200% 100%;
+  animation:shim 1.4s infinite;
+  border-radius:14px;height:110px;
+}
+@keyframes shim{to{background-position:-200% 0}}
 
-  .cat-icon {
-    width: 50px; height: 50px;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    position: relative;
-    animation: iconFloat 3s ease-in-out infinite;
-  }
-  @keyframes iconFloat {
-    0%,100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(5deg); }
-  }
-  .cat-info { flex: 1; }
-  .cat-name {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(13px,2vw,18px);
-    font-weight: 700;
-    margin-bottom: 3px;
-  }
-  .cat-meta {
-    font-size: 12px; color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
-  .cat-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px; font-weight: 700;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
-  }
-  .badge-mobile {
-    background: rgba(255,0,110,0.15);
-    border: 1px solid var(--accent2);
-    color: var(--accent2);
-  }
-  .badge-laptop {
-    background: rgba(0,245,255,0.15);
-    border: 1px solid var(--accent);
-    color: var(--accent);
-  }
-  .badge-both {
-    background: rgba(124,58,237,0.15);
-    border: 1px solid var(--accent3);
-    color: var(--accent3);
-  }
+/* MODAL */
+.overlay{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(12px);
+  align-items:center;justify-content:center;padding:16px;
+}
+.overlay.show{display:flex}
+.modal{
+  width:min(94vw,440px);max-height:88vh;border-radius:26px;
+  overflow:hidden;display:flex;flex-direction:column;
+  animation:mIn .4s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes mIn{from{opacity:0;transform:scale(.6) translateY(40px)}to{opacity:1;transform:none}}
+.m-head{
+  padding:36px 24px 24px;text-align:center;position:relative;
+  background-size:200% 200%;animation:gradAnim 4s ease infinite;
+}
+@keyframes gradAnim{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.m-close{
+  position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.m-close:hover{background:var(--accent2);transform:rotate(90deg)}
+.m-ico{
+  width:80px;height:80px;border-radius:20px;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;font-size:44px;
+  background:rgba(0,0,0,.3);backdrop-filter:blur(8px);
+  animation:bounce 2.5s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.m-name{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:#fff;position:relative}
+.m-tag{font-size:12px;color:rgba(255,255,255,.8);margin-top:5px}
+.m-body{background:var(--surface);padding:20px;overflow-y:auto;flex:1}
+.m-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.m-stat{
+  background:var(--card);border-radius:12px;padding:12px;text-align:center;
+  border:1px solid var(--border);
+}
+.m-stat-n{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:var(--accent)}
+.m-stat-l{font-size:10px;color:var(--muted);margin-top:3px}
+.m-feats h4{font-family:'Orbitron',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:10px}
+.m-feat{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 0;border-bottom:1px solid rgba(26,58,92,.3);
+  font-size:13px;
+}
+.m-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;animation:dp 1.5s ease infinite}
+@keyframes dp{0%,100%{transform:scale(1)}50%{transform:scale(1.6);opacity:.6}}
+.m-btns{display:flex;gap:10px;margin-top:18px}
+.m-btn{
+  flex:1;padding:13px;border-radius:12px;border:none;
+  font-family:'Orbitron',monospace;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .25s;letter-spacing:.5px;
+}
+.m-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,245,255,.3)}
+.btn-p{background:linear-gradient(135deg,var(--accent),#0af);color:#000}
+.btn-s{background:transparent;border:1px solid var(--accent)!important;color:var(--accent)}
 
-  /* APPS GRID */
-  .apps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 12px;
-  }
+/* SCROLL TOP */
+#stBtn{
+  position:fixed;bottom:24px;right:20px;z-index:500;
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  border:none;cursor:pointer;font-size:20px;color:#000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(16px);transition:all .3s;
+  box-shadow:0 4px 16px rgba(0,245,255,.35);
+}
+#stBtn.show{opacity:1;transform:translateY(0)}
+#stBtn:hover{transform:translateY(-3px) scale(1.1)}
 
-  /* APP CARD */
-  .app-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
-    position: relative;
-    overflow: hidden;
-    animation: cardPop 0.4s ease both;
-  }
-  .app-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(0,245,255,0.05));
-    opacity: 0; transition: opacity 0.3s;
-  }
-  .app-card::after {
-    content: ''; position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: conic-gradient(transparent, rgba(0,245,255,0.1), transparent);
-    opacity: 0; transition: opacity 0.3s;
-    animation: rotate 3s linear infinite;
-  }
-  @keyframes rotate { to { transform: rotate(360deg); } }
-  @keyframes cardPop {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  .app-card:hover {
-    transform: translateY(-8px) scale(1.05);
-    border-color: var(--accent);
-    box-shadow: 0 15px 40px rgba(0,245,255,0.2), var(--glow);
-    z-index: 10;
-  }
-  .app-card:hover::before { opacity: 1; }
-  .app-card:hover::after { opacity: 1; }
+/* NO RESULT */
+.no-res{text-align:center;padding:80px 20px;color:var(--muted);font-family:'Orbitron',monospace;font-size:14px}
 
-  .app-icon-wrap {
-    width: 56px; height: 56px;
-    margin: 0 auto 10px;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    position: relative; z-index: 1;
-    transition: transform 0.3s;
-  }
-  .app-card:hover .app-icon-wrap {
-    transform: scale(1.15) rotate(10deg);
-    animation: iconSpin 0.5s ease;
-  }
-  @keyframes iconSpin {
-    from { transform: scale(1.15) rotate(0deg); }
-    to { transform: scale(1.15) rotate(360deg); }
-  }
-  .app-name {
-    font-size: 11px; font-weight: 700;
-    color: var(--text);
-    line-height: 1.3;
-    position: relative; z-index: 1;
-    transition: color 0.3s;
-  }
-  .app-card:hover .app-name { color: var(--accent); }
-  .app-type {
-    font-size: 9px; color: var(--muted);
-    margin-top: 4px; position: relative; z-index: 1;
-    font-family: 'Space Mono', monospace;
-  }
-  .app-stars {
-    font-size: 9px; color: var(--gold);
-    margin-top: 4px; position: relative; z-index: 1;
-  }
-
-  /* APP HOME MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0; z-index: 9999;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(10px);
-    animation: overlayIn 0.3s ease;
-  }
-  @keyframes overlayIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  .modal-overlay.show { display: flex; align-items: center; justify-content: center; }
-
-  .app-home {
-    width: min(95vw, 480px);
-    max-height: 90vh;
-    border-radius: 30px;
-    overflow: hidden;
-    position: relative;
-    animation: modalIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
-    display: flex; flex-direction: column;
-  }
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.5) rotateY(30deg); }
-    to { opacity: 1; transform: scale(1) rotateY(0deg); }
-  }
-
-  .app-home-header {
-    padding: 40px 30px 30px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .app-home-header::before {
-    content: ''; position: absolute; inset: 0;
-    animation: gradShift 3s ease infinite;
-  }
-  @keyframes gradShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  .home-app-icon {
-    width: 90px; height: 90px;
-    border-radius: 22px;
-    margin: 0 auto 15px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 48px;
-    position: relative;
-    animation: iconBounce 2s ease-in-out infinite;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  }
-  @keyframes iconBounce {
-    0%,100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-10px) scale(1.05); }
-  }
-  .home-app-name {
-    font-family: 'Orbitron', monospace;
-    font-size: 22px; font-weight: 900;
-    color: #fff;
-    position: relative; z-index: 1;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
-  }
-  .home-app-tagline {
-    font-size: 13px; opacity: 0.85; margin-top: 5px;
-    position: relative; z-index: 1; color: #fff;
-  }
-
-  .app-home-body {
-    background: var(--surface);
-    padding: 25px;
-    overflow-y: auto;
-    flex: 1;
-  }
-  .home-stats {
-    display: grid; grid-template-columns: repeat(3,1fr);
-    gap: 12px; margin-bottom: 25px;
-  }
-  .home-stat {
-    background: var(--card);
-    border-radius: 14px; padding: 14px;
-    text-align: center;
-    border: 1px solid var(--border);
-    animation: statPulse 2s ease infinite;
-  }
-  .home-stat:nth-child(2) { animation-delay: 0.3s; }
-  .home-stat:nth-child(3) { animation-delay: 0.6s; }
-  @keyframes statPulse {
-    0%,100% { border-color: var(--border); }
-    50% { border-color: rgba(0,245,255,0.3); }
-  }
-  .home-stat-num {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px; font-weight: 700;
-    color: var(--accent);
-  }
-  .home-stat-label { font-size: 10px; color: var(--muted); margin-top: 4px; }
-
-  .home-features { margin-bottom: 20px; }
-  .home-features h4 {
-    font-family: 'Orbitron', monospace;
-    font-size: 12px; color: var(--muted);
-    letter-spacing: 2px; margin-bottom: 12px;
-  }
-  .feature-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(26,58,92,0.3);
-    animation: featureSlide 0.4s ease both;
-  }
-  @keyframes featureSlide {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  .feature-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-    animation: dotPulse 1.5s ease infinite;
-    flex-shrink: 0;
-  }
-  @keyframes dotPulse {
-    0%,100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.6; }
-  }
-  .feature-text { font-size: 13px; color: var(--text); }
-
-  .home-cta {
-    display: flex; gap: 12px;
-  }
-  .btn-install {
-    flex: 1; padding: 14px;
-    border-radius: 14px;
-    border: none;
-    font-family: 'Orbitron', monospace;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer;
-    position: relative; overflow: hidden;
-    transition: all 0.3s;
-    letter-spacing: 1px;
-  }
-  .btn-install::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.5s;
-  }
-  .btn-install:hover::before { transform: translateX(100%); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), #0099cc);
-    color: #000;
-  }
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid var(--accent) !important;
-    color: var(--accent);
-  }
-  .btn-install:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,245,255,0.3); }
-
-  .close-modal {
-    position: absolute; top: 15px; right: 15px;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10;
-    transition: all 0.2s;
-  }
-  .close-modal:hover {
-    background: var(--accent2);
-    transform: rotate(90deg) scale(1.1);
-  }
-
-  /* LOADING */
-  .loading-screen {
-    position: fixed; inset: 0; z-index: 99999;
-    background: var(--bg);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 20px;
-    transition: opacity 0.5s, visibility 0.5s;
-  }
-  .loading-screen.hide { opacity: 0; visibility: hidden; }
-  .load-logo {
-    font-family: 'Orbitron', monospace;
-    font-size: 40px; font-weight: 900;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: loadPulse 1s ease infinite;
-  }
-  @keyframes loadPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .load-bar-wrap {
-    width: 300px; height: 4px;
-    background: var(--card); border-radius: 4px; overflow: hidden;
-  }
-  .load-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    width: 0; border-radius: 4px;
-    animation: loadFill 1.5s ease forwards;
-  }
-  @keyframes loadFill { to { width: 100%; } }
-  .load-text {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px; color: var(--muted);
-    animation: loadText 1.5s steps(20) forwards;
-  }
-
-  /* SCROLL TO TOP */
-  .scroll-top {
-    position: fixed; bottom: 30px; right: 30px;
-    width: 50px; height: 50px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    border: none; cursor: pointer; z-index: 500;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; color: #000;
-    opacity: 0; transform: translateY(20px);
-    transition: all 0.3s;
-    box-shadow: 0 4px 20px rgba(0,245,255,0.4);
-  }
-  .scroll-top.show { opacity: 1; transform: translateY(0); }
-  .scroll-top:hover { transform: translateY(-4px) scale(1.1); }
-  .scroll-top:hover { animation: btnSpin 0.5s ease; }
-  @keyframes btnSpin { to { transform: translateY(-4px) scale(1.1) rotate(360deg); } }
-
-  /* FLOATING PARTICLES CANVAS */
-  #particles { opacity: 0.6; }
-
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    .apps-grid { grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 8px; }
-    .header-stats { display: none; }
-    .app-card { padding: 12px 6px; }
-    .app-icon-wrap { width: 44px; height: 44px; font-size: 22px; }
-    .cat-icon { width: 40px; height: 40px; font-size: 20px; }
-    .filter-bar { padding: 8px 15px; }
-  }
-
-  /* SECTION COUNT */
-  .section-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px; color: rgba(0,245,255,0.3);
-    letter-spacing: 2px; margin-bottom: 5px;
-  }
-
-  /* PULSE RING */
-  .pulse-ring {
-    position: absolute; inset: -4px;
-    border-radius: 18px;
-    border: 2px solid var(--accent);
-    opacity: 0;
-    animation: pulseRing 2s ease-out infinite;
-  }
-  @keyframes pulseRing {
-    0% { opacity: 0.8; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.4); }
-  }
-
-  /* SKELETON LOADER */
-  .skeleton {
-    background: linear-gradient(90deg, var(--card) 25%, var(--surface) 50%, var(--card) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 8px;
-  }
-  @keyframes shimmer { to { background-position: -200% 0; } }
+/* COUNT BAR */
+.count-bar{
+  padding:8px 0 14px;font-family:'Space Mono',monospace;
+  font-size:11px;color:var(--muted);
+}
+.count-bar span{color:var(--accent)}
 </style>
 </head>
 <body>
 
-<!-- Loading Screen -->
-<div class="loading-screen" id="loadingScreen">
-  <div class="load-logo">NEXUS</div>
-  <div class="load-bar-wrap"><div class="load-bar"></div></div>
-  <div class="load-text">Initializing 500 Universe Portals...</div>
-</div>
-
-<!-- Cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- Particles Canvas -->
-<canvas id="particles"></canvas>
-
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="app-home" id="appHome">
-    <div class="app-home-header" id="appHomeHeader">
-      <button class="close-modal" onclick="closeModal()">✕</button>
-      <div class="home-app-icon" id="homeIcon"></div>
-      <div class="home-app-name" id="homeName"></div>
-      <div class="home-app-tagline" id="homeTagline"></div>
-    </div>
-    <div class="app-home-body">
-      <div class="home-stats" id="homeStats"></div>
-      <div class="home-features">
-        <h4>KEY FEATURES</h4>
-        <div id="homeFeatures"></div>
-      </div>
-      <div class="home-cta">
-        <button class="btn-install btn-primary">⚡ INSTALL NOW</button>
-        <button class="btn-install btn-secondary">♡ WISHLIST</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Header -->
 <header>
-  <div class="header-inner">
+  <div class="hdr">
     <div class="logo">◈ NEXUS</div>
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search apps, categories..." oninput="filterApps(this.value)">
+    <div class="search-wrap">
+      <input type="text" id="searchIn" placeholder="Search categories or apps..." autocomplete="off">
     </div>
-    <div class="header-stats">
-      <div class="stat"><div class="stat-num">500</div><div>Categories</div></div>
-      <div class="stat"><div class="stat-num">21K</div><div>Apps</div></div>
-      <div class="stat"><div class="stat-num">∞</div><div>Vibes</div></div>
+    <div class="hdr-stats">
+      <div class="hdr-stat"><b>500</b>Cats</div>
+      <div class="hdr-stat"><b>21K</b>Apps</div>
     </div>
   </div>
 </header>
 
-<!-- Filter Bar -->
-<div class="filter-bar">
-  <span class="filter-label">FILTER:</span>
-  <button class="filter-btn active" onclick="setFilter('all',this)">ALL</button>
-  <button class="filter-btn mobile" onclick="setFilter('mobile',this)">📱 MOBILE</button>
-  <button class="filter-btn" onclick="setFilter('laptop',this)">💻 LAPTOP</button>
-  <button class="filter-btn" onclick="setFilter('both',this)">⚡ BOTH</button>
+<div class="filters">
+  <span class="flabel">FILTER:</span>
+  <button class="fbtn on" data-f="all">ALL</button>
+  <button class="fbtn mob" data-f="mobile">📱 MOBILE</button>
+  <button class="fbtn" data-f="laptop">💻 LAPTOP</button>
 </div>
 
-<!-- Main -->
-<main id="mainContent"></main>
+<main>
+  <div class="count-bar">Showing <span id="countSpan">500</span> categories</div>
+  <div id="root"></div>
+</main>
 
-<!-- Scroll Top -->
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="m-head" id="mHead">
+      <button class="m-close" onclick="closeModal()">✕</button>
+      <div class="m-ico" id="mIco"></div>
+      <div class="m-name" id="mName"></div>
+      <div class="m-tag" id="mTag"></div>
+    </div>
+    <div class="m-body">
+      <div class="m-stats" id="mStats"></div>
+      <div class="m-feats">
+        <h4>KEY FEATURES</h4>
+        <div id="mFeats"></div>
+      </div>
+      <div class="m-btns">
+        <button class="m-btn btn-p">⚡ INSTALL</button>
+        <button class="m-btn btn-s">♡ SAVE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="stBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-// ===== DATA ENGINE =====
-const EMOJIS = ['🎮','📸','🎵','🎬','📚','💰','🏋️','✈️','🍕','🎨','💊','📊','🔐','🛍️','🎯','🌐','💬','📧','🔧','🌙','⚡','🎤','🔬','🚗','🏠','👗','🎭','📱','💡','🔴','🟢','🟡','🟣','🔵','⚪','🟤','🟠','🌟','💎','🔥','❄️','🌊','🌈','🦋','🦁','🐉','🤖','👾','🎪','🎡','🎢','🎠','🎗','🏆','🥇','🎖','🏅','🎻','🥁','🎹','🎸','🎺','🪗','🎷','🎲','🎰','🃏','🎴','🀄','🎳','🏓','🥊','⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏑','🏒','🥍','🏸','🥅','⛳','🏹','🎣','🤿','🎽','🛹','🛷','⛸','🏂','🪂','🏋','🤸','🤼','🤺','🤾','🏇','⛹','🤻','🏊','🚣','🧗','🚵','🚴','🏆'];
-
-const APP_TYPES = ['Free','Premium','Freemium','Open Source','Enterprise','Beta'];
-const PLATFORMS = ['mobile','laptop','both'];
-
-const CATEGORIES = [
-  // === MOBILE CATEGORIES (250) ===
-  {name:'Social Media',icon:'📱',type:'mobile',color:'#ff006e'},
-  {name:'Instant Messaging',icon:'💬',type:'mobile',color:'#00f5ff'},
-  {name:'Video Calling',icon:'📹',type:'mobile',color:'#7c3aed'},
-  {name:'Dating Apps',icon:'❤️',type:'mobile',color:'#ff4757'},
-  {name:'Short Video',icon:'🎬',type:'mobile',color:'#ff6b35'},
-  {name:'Photo Editing',icon:'📸',type:'mobile',color:'#ffd700'},
-  {name:'Music Streaming',icon:'🎵',type:'mobile',color:'#1db954'},
-  {name:'Podcast Apps',icon:'🎙️',type:'mobile',color:'#8e44ad'},
-  {name:'Mobile Gaming',icon:'🎮',type:'mobile',color:'#e74c3c'},
-  {name:'Casual Games',icon:'🎡',type:'mobile',color:'#f39c12'},
-  {name:'RPG Games',icon:'⚔️',type:'mobile',color:'#8b0000'},
-  {name:'Puzzle Games',icon:'🧩',type:'mobile',color:'#3498db'},
-  {name:'Racing Games',icon:'🏎️',type:'mobile',color:'#e67e22'},
-  {name:'Sports Games',icon:'⚽',type:'mobile',color:'#27ae60'},
-  {name:'Strategy Games',icon:'♟️',type:'mobile',color:'#2c3e50'},
-  {name:'Card Games',icon:'🃏',type:'mobile',color:'#c0392b'},
-  {name:'Word Games',icon:'🔤',type:'mobile',color:'#16a085'},
-  {name:'Trivia Games',icon:'❓',type:'mobile',color:'#8e44ad'},
-  {name:'AR Games',icon:'🕶️',type:'mobile',color:'#00bcd4'},
-  {name:'Music Games',icon:'🎸',type:'mobile',color:'#ff5722'},
-  {name:'Food Delivery',icon:'🍕',type:'mobile',color:'#ff6f00'},
-  {name:'Grocery Apps',icon:'🛒',type:'mobile',color:'#2e7d32'},
-  {name:'Restaurant Finder',icon:'🍽️',type:'mobile',color:'#bf360c'},
-  {name:'Recipe Apps',icon:'👨‍🍳',type:'mobile',color:'#e65100'},
-  {name:'Diet Tracker',icon:'🥗',type:'mobile',color:'#558b2f'},
-  {name:'Calorie Counter',icon:'🔢',type:'mobile',color:'#00838f'},
-  {name:'Water Tracker',icon:'💧',type:'mobile',color:'#0288d1'},
-  {name:'Fasting Apps',icon:'⏱️',type:'mobile',color:'#6a1b9a'},
-  {name:'Meditation',icon:'🧘',type:'mobile',color:'#4527a0'},
-  {name:'Yoga Apps',icon:'🏃',type:'mobile',color:'#00695c'},
-  {name:'Sleep Tracker',icon:'😴',type:'mobile',color:'#1a237e'},
-  {name:'Fitness Tracker',icon:'🏋️',type:'mobile',color:'#b71c1c'},
-  {name:'Running Apps',icon:'🏃‍♂️',type:'mobile',color:'#e91e63'},
-  {name:'Cycling Apps',icon:'🚴',type:'mobile',color:'#4caf50'},
-  {name:'Gym Workouts',icon:'💪',type:'mobile',color:'#f44336'},
-  {name:'Period Tracker',icon:'🌙',type:'mobile',color:'#9c27b0'},
-  {name:'Baby Monitor',icon:'👶',type:'mobile',color:'#ff8a80'},
-  {name:'Kids Education',icon:'📚',type:'mobile',color:'#ffb300'},
-  {name:'Language Learning',icon:'🌍',type:'mobile',color:'#00acc1'},
-  {name:'Flashcard Apps',icon:'🃏',type:'mobile',color:'#7e57c2'},
-  {name:'Study Timer',icon:'⏲️',type:'mobile',color:'#26a69a'},
-  {name:'Note Taking',icon:'📝',type:'mobile',color:'#ffa726'},
-  {name:'Journal Apps',icon:'📓',type:'mobile',color:'#ab47bc'},
-  {name:'To-Do Lists',icon:'✅',type:'mobile',color:'#42a5f5'},
-  {name:'Habit Tracker',icon:'🔄',type:'mobile',color:'#26c6da'},
-  {name:'Goal Setting',icon:'🎯',type:'mobile',color:'#ef5350'},
-  {name:'Mind Mapping',icon:'🗺️',type:'mobile',color:'#66bb6a'},
-  {name:'Password Manager',icon:'🔐',type:'mobile',color:'#5c6bc0'},
-  {name:'VPN Apps',icon:'🛡️',type:'mobile',color:'#78909c'},
-  {name:'Antivirus Mobile',icon:'🦠',type:'mobile',color:'#d32f2f'},
-  {name:'File Manager',icon:'📁',type:'mobile',color:'#0277bd'},
-  {name:'Cloud Storage',icon:'☁️',type:'mobile',color:'#0097a7'},
-  {name:'QR Scanner',icon:'📷',type:'mobile',color:'#37474f'},
-  {name:'Barcode Reader',icon:'▌▌▌',type:'mobile',color:'#455a64'},
-  {name:'Document Scanner',icon:'📄',type:'mobile',color:'#1565c0'},
-  {name:'PDF Reader',icon:'📕',type:'mobile',color:'#c62828'},
-  {name:'E-Book Reader',icon:'📖',type:'mobile',color:'#4a148c'},
-  {name:'Audiobook Apps',icon:'🔊',type:'mobile',color:'#e65100'},
-  {name:'News Apps',icon:'📰',type:'mobile',color:'#212121'},
-  {name:'Weather Apps',icon:'🌤️',type:'mobile',color:'#0288d1'},
-  {name:'Maps Navigation',icon:'🗺️',type:'mobile',color:'#388e3c'},
-  {name:'Traffic Apps',icon:'🚦',type:'mobile',color:'#f57f17'},
-  {name:'Taxi Booking',icon:'🚕',type:'mobile',color:'#f9a825'},
-  {name:'Bus Tracker',icon:'🚌',type:'mobile',color:'#1976d2'},
-  {name:'Flight Booking',icon:'✈️',type:'mobile',color:'#0288d1'},
-  {name:'Hotel Booking',icon:'🏨',type:'mobile',color:'#7b1fa2'},
-  {name:'Travel Planner',icon:'🌏',type:'mobile',color:'#00796b'},
-  {name:'Currency Converter',icon:'💱',type:'mobile',color:'#388e3c'},
-  {name:'Banking Apps',icon:'🏦',type:'mobile',color:'#1a237e'},
-  {name:'UPI Payment',icon:'💳',type:'mobile',color:'#00796b'},
-  {name:'Crypto Wallet',icon:'₿',type:'mobile',color:'#f57c00'},
-  {name:'Stock Trading',icon:'📈',type:'mobile',color:'#2e7d32'},
-  {name:'Mutual Funds',icon:'💰',type:'mobile',color:'#1565c0'},
-  {name:'Insurance Apps',icon:'🛡️',type:'mobile',color:'#283593'},
-  {name:'Loan Apps',icon:'💵',type:'mobile',color:'#1b5e20'},
-  {name:'Expense Tracker',icon:'💸',type:'mobile',color:'#bf360c'},
-  {name:'Bill Splitter',icon:'🧾',type:'mobile',color:'#004d40'},
-  {name:'Savings Goals',icon:'🏦',type:'mobile',color:'#0d47a1'},
-  {name:'Shopping Apps',icon:'🛍️',type:'mobile',color:'#ad1457'},
-  {name:'Fashion Shopping',icon:'👗',type:'mobile',color:'#880e4f'},
-  {name:'Electronics Store',icon:'💻',type:'mobile',color:'#1a237e'},
-  {name:'Beauty Apps',icon:'💄',type:'mobile',color:'#c2185b'},
-  {name:'Skincare Tracker',icon:'✨',type:'mobile',color:'#f48fb1'},
-  {name:'Hair Style',icon:'💇',type:'mobile',color:'#6d4c41'},
-  {name:'Clothing Resale',icon:'👔',type:'mobile',color:'#5d4037'},
-  {name:'Furniture Shopping',icon:'🛋️',type:'mobile',color:'#8d6e63'},
-  {name:'Sports Shopping',icon:'⚽',type:'mobile',color:'#43a047'},
-  {name:'Pet Care Apps',icon:'🐾',type:'mobile',color:'#795548'},
-  {name:'Vet Finder',icon:'🐕',type:'mobile',color:'#5d4037'},
-  {name:'Plant Care',icon:'🌿',type:'mobile',color:'#2e7d32'},
-  {name:'Home Automation',icon:'🏠',type:'mobile',color:'#0277bd'},
-  {name:'Smart Home',icon:'💡',type:'mobile',color:'#f57f17'},
-  {name:'Security Cam',icon:'📷',type:'mobile',color:'#37474f'},
-  {name:'Parental Control',icon:'👨‍👩‍👧',type:'mobile',color:'#1565c0'},
-  {name:'Screen Time',icon:'⏱️',type:'mobile',color:'#6a1b9a'},
-  {name:'Focus Apps',icon:'🎯',type:'mobile',color:'#b71c1c'},
-  {name:'Alarm Clock',icon:'⏰',type:'mobile',color:'#1a237e'},
-  {name:'Flashlight Apps',icon:'🔦',type:'mobile',color:'#f9a825'},
-  {name:'Calculator',icon:'🔢',type:'mobile',color:'#37474f'},
-  {name:'Compass Apps',icon:'🧭',type:'mobile',color:'#00695c'},
-  {name:'Level Tool',icon:'📐',type:'mobile',color:'#4527a0'},
-  {name:'Unit Converter',icon:'🔄',type:'mobile',color:'#00838f'},
-  {name:'BMI Calculator',icon:'⚖️',type:'mobile',color:'#4caf50'},
-  {name:'Heart Rate',icon:'❤️‍🔥',type:'mobile',color:'#e53935'},
-  {name:'Blood Pressure',icon:'🩺',type:'mobile',color:'#c62828'},
-  {name:'Medicine Reminder',icon:'💊',type:'mobile',color:'#1565c0'},
-  {name:'Doctor Booking',icon:'👨‍⚕️',type:'mobile',color:'#0277bd'},
-  {name:'Health Record',icon:'🏥',type:'mobile',color:'#00695c'},
-  {name:'Mental Health',icon:'🧠',type:'mobile',color:'#7b1fa2'},
-  {name:'Therapy Apps',icon:'🛋️',type:'mobile',color:'#6a1b9a'},
-  {name:'Breathing Exercise',icon:'🌬️',type:'mobile',color:'#00acc1'},
-  {name:'Color Picker',icon:'🎨',type:'mobile',color:'#f44336'},
-  {name:'Font Finder',icon:'🔤',type:'mobile',color:'#512da8'},
-  {name:'Logo Maker',icon:'✏️',type:'mobile',color:'#e91e63'},
-  {name:'Video Editor Mobile',icon:'🎞️',type:'mobile',color:'#d32f2f'},
-  {name:'GIF Maker',icon:'🎭',type:'mobile',color:'#f57c00'},
-  {name:'Meme Creator',icon:'😂',type:'mobile',color:'#fbc02d'},
-  {name:'Sticker Maker',icon:'⭐',type:'mobile',color:'#7b1fa2'},
-  {name:'Avatar Creator',icon:'👤',type:'mobile',color:'#1565c0'},
-  {name:'AI Camera',icon:'🤖',type:'mobile',color:'#00695c'},
-  {name:'Selfie Editor',icon:'🤳',type:'mobile',color:'#ad1457'},
-  {name:'Beauty Filter',icon:'💋',type:'mobile',color:'#c2185b'},
-  {name:'Body Cam',icon:'🎥',type:'mobile',color:'#bf360c'},
-  {name:'360 Camera',icon:'🔵',type:'mobile',color:'#0277bd'},
-  {name:'NFT Marketplace',icon:'🖼️',type:'mobile',color:'#4527a0'},
-  {name:'Freelance Mobile',icon:'💼',type:'mobile',color:'#1565c0'},
-  {name:'Resume Builder',icon:'📋',type:'mobile',color:'#0d47a1'},
-  {name:'Job Search',icon:'🔍',type:'mobile',color:'#1a237e'},
-  {name:'Interview Prep',icon:'🎤',type:'mobile',color:'#6a1b9a'},
-  {name:'Business Cards',icon:'🪪',type:'mobile',color:'#37474f'},
-  {name:'Invoice Generator',icon:'🧾',type:'mobile',color:'#1b5e20'},
-  {name:'Timesheet',icon:'⏱️',type:'mobile',color:'#0277bd'},
-  {name:'Team Chat',icon:'👥',type:'mobile',color:'#7b1fa2'},
-  {name:'Task Manager Mobile',icon:'📋',type:'mobile',color:'#00695c'},
-  {name:'CRM Mobile',icon:'📊',type:'mobile',color:'#1565c0'},
-  {name:'Sales Tracker',icon:'📈',type:'mobile',color:'#2e7d32'},
-  {name:'Inventory Mobile',icon:'📦',type:'mobile',color:'#e65100'},
-  {name:'POS System',icon:'💳',type:'mobile',color:'#1a237e'},
-  {name:'E-Commerce',icon:'🛒',type:'mobile',color:'#ff6f00'},
-  {name:'Dropshipping',icon:'📦',type:'mobile',color:'#f57c00'},
-  {name:'Print on Demand',icon:'🖨️',type:'mobile',color:'#37474f'},
-  {name:'Digital Products',icon:'💾',type:'mobile',color:'#4527a0'},
-  {name:'Online Courses',icon:'🎓',type:'mobile',color:'#1565c0'},
-  {name:'Tutoring Apps',icon:'✏️',type:'mobile',color:'#00695c'},
-  {name:'Math Helper',icon:'➕',type:'mobile',color:'#e53935'},
-  {name:'Science Apps',icon:'🔬',type:'mobile',color:'#0288d1'},
-  {name:'History Apps',icon:'🏛️',type:'mobile',color:'#795548'},
-  {name:'Geography',icon:'🌍',type:'mobile',color:'#388e3c'},
-  {name:'Coding Learn',icon:'👨‍💻',type:'mobile',color:'#1a237e'},
-  {name:'Art Learning',icon:'🎨',type:'mobile',color:'#e91e63'},
-  {name:'Music Learning',icon:'🎼',type:'mobile',color:'#7b1fa2'},
-  {name:'Chess Mobile',icon:'♟️',type:'mobile',color:'#212121'},
-  {name:'Sudoku',icon:'🔢',type:'mobile',color:'#0277bd'},
-  {name:'Crossword',icon:'📰',type:'mobile',color:'#37474f'},
-  {name:'Solitaire',icon:'🃏',type:'mobile',color:'#c62828'},
-  {name:'Mahjong',icon:'🀄',type:'mobile',color:'#bf360c'},
-  {name:'Bingo Apps',icon:'🎱',type:'mobile',color:'#7b1fa2'},
-  {name:'Lottery Apps',icon:'🎰',type:'mobile',color:'#f57f17'},
-  {name:'Sports Betting',icon:'🏆',type:'mobile',color:'#1a237e'},
-  {name:'Fantasy Sports',icon:'⚽',type:'mobile',color:'#1b5e20'},
-  {name:'Cricket Score',icon:'🏏',type:'mobile',color:'#1565c0'},
-  {name:'Football Score',icon:'⚽',type:'mobile',color:'#2e7d32'},
-  {name:'Live Sports',icon:'📺',type:'mobile',color:'#d32f2f'},
-  {name:'Sports News',icon:'📰',type:'mobile',color:'#212121'},
-  {name:'Fitness Challenge',icon:'🏆',type:'mobile',color:'#b71c1c'},
-  {name:'Step Counter',icon:'👟',type:'mobile',color:'#00695c'},
-  {name:'Bike Computer',icon:'🚲',type:'mobile',color:'#1565c0'},
-  {name:'Swimming Log',icon:'🏊',type:'mobile',color:'#0288d1'},
-  {name:'Hiking Trails',icon:'⛰️',type:'mobile',color:'#388e3c'},
-  {name:'Golf Apps',icon:'⛳',type:'mobile',color:'#2e7d32'},
-  {name:'Tennis Tracker',icon:'🎾',type:'mobile',color:'#f57f17'},
-  {name:'Surf Apps',icon:'🌊',type:'mobile',color:'#0277bd'},
-  {name:'Ski Resort',icon:'🎿',type:'mobile',color:'#1a237e'},
-  {name:'Climbing Apps',icon:'🧗',type:'mobile',color:'#795548'},
-  {name:'Martial Arts',icon:'🥋',type:'mobile',color:'#c62828'},
-  {name:'Yoga Studio',icon:'🧘‍♀️',type:'mobile',color:'#7b1fa2'},
-  {name:'Pilates Apps',icon:'💃',type:'mobile',color:'#e91e63'},
-  {name:'Dance Apps',icon:'🕺',type:'mobile',color:'#ad1457'},
-  {name:'Zumba Apps',icon:'🎵',type:'mobile',color:'#f44336'},
-  {name:'Home Workout',icon:'🏠',type:'mobile',color:'#c62828'},
-  {name:'Stretch Timer',icon:'⏱️',type:'mobile',color:'#00695c'},
-  {name:'Protein Tracker',icon:'💪',type:'mobile',color:'#e53935'},
-  {name:'Supplement Log',icon:'💊',type:'mobile',color:'#1565c0'},
-  {name:'Weight Loss',icon:'⚖️',type:'mobile',color:'#4caf50'},
-  {name:'Macro Counter',icon:'🥩',type:'mobile',color:'#bf360c'},
-  {name:'Vegan Apps',icon:'🥦',type:'mobile',color:'#388e3c'},
-  {name:'Keto Diet',icon:'🥑',type:'mobile',color:'#2e7d32'},
-  {name:'Food Allergy',icon:'⚠️',type:'mobile',color:'#f57f17'},
-  {name:'Meal Prep',icon:'🍱',type:'mobile',color:'#e65100'},
-  {name:'Cooking Timer',icon:'⏲️',type:'mobile',color:'#bf360c'},
-  {name:'Wine Guide',icon:'🍷',type:'mobile',color:'#880e4f'},
-  {name:'Beer Guide',icon:'🍺',type:'mobile',color:'#f57f17'},
-  {name:'Coffee Apps',icon:'☕',type:'mobile',color:'#6d4c41'},
-  {name:'Tea Guide',icon:'🍵',type:'mobile',color:'#388e3c'},
-  {name:'Cocktail Maker',icon:'🍹',type:'mobile',color:'#e91e63'},
-  {name:'Bakery Apps',icon:'🥐',type:'mobile',color:'#f57c00'},
-  {name:'Sushi Guide',icon:'🍣',type:'mobile',color:'#c62828'},
-  {name:'Pizza Maker',icon:'🍕',type:'mobile',color:'#bf360c'},
-  {name:'Burger Finder',icon:'🍔',type:'mobile',color:'#e65100'},
-  {name:'Dessert Apps',icon:'🍰',type:'mobile',color:'#ad1457'},
-  {name:'Ice Cream',icon:'🍦',type:'mobile',color:'#7b1fa2'},
-  {name:'Smoothie Maker',icon:'🥤',type:'mobile',color:'#00695c'},
-  {name:'Juice Cleanse',icon:'🍊',type:'mobile',color:'#ef6c00'},
-  {name:'Snack Finder',icon:'🍿',type:'mobile',color:'#f57f17'},
-  {name:'Midnight Food',icon:'🌙',type:'mobile',color:'#1a237e'},
-  {name:'Street Food',icon:'🌮',type:'mobile',color:'#f57c00'},
-  {name:'Catering Apps',icon:'👨‍🍳',type:'mobile',color:'#37474f'},
-  {name:'Farm to Table',icon:'🌾',type:'mobile',color:'#558b2f'},
-  {name:'Organic Food',icon:'🌱',type:'mobile',color:'#2e7d32'},
-  {name:'Spice Guide',icon:'🌶️',type:'mobile',color:'#d32f2f'},
-  {name:'BBQ Apps',icon:'🔥',type:'mobile',color:'#bf360c'},
-  {name:'Grilling Guide',icon:'🥩',type:'mobile',color:'#c62828'},
-  {name:'Fermentation',icon:'🫙',type:'mobile',color:'#795548'},
-  {name:'Bread Baking',icon:'🍞',type:'mobile',color:'#a1887f'},
-  {name:'Cheese Guide',icon:'🧀',type:'mobile',color:'#fbc02d'},
-  {name:'Chocolate Apps',icon:'🍫',type:'mobile',color:'#6d4c41'},
-  {name:'Candy Making',icon:'🍬',type:'mobile',color:'#e91e63'},
-  {name:'Jam Making',icon:'🍓',type:'mobile',color:'#c2185b'},
-  {name:'Pickle Guide',icon:'🥒',type:'mobile',color:'#558b2f'},
-  {name:'Hot Sauce',icon:'🌶️',type:'mobile',color:'#d32f2f'},
-  {name:'Ethnic Cuisine',icon:'🍜',type:'mobile',color:'#ef6c00'},
-  {name:'Travel Food',icon:'✈️',type:'mobile',color:'#0277bd'},
-  {name:'Food Tour',icon:'🗺️',type:'mobile',color:'#00695c'},
-  {name:'Restaurant Review',icon:'⭐',type:'mobile',color:'#f57f17'},
-  {name:'Chef Connect',icon:'👨‍🍳',type:'mobile',color:'#37474f'},
-  {name:'Food Blogging',icon:'📸',type:'mobile',color:'#e91e63'},
-  {name:'Cooking Community',icon:'👥',type:'mobile',color:'#7b1fa2'},
-  {name:'Nutrition Science',icon:'🔬',type:'mobile',color:'#1565c0'},
-  {name:'Food Photography',icon:'📷',type:'mobile',color:'#ad1457'},
-  {name:'Table Booking',icon:'🍽️',type:'mobile',color:'#bf360c'},
-  {name:'Cloud Kitchen',icon:'☁️',type:'mobile',color:'#0277bd'},
-  {name:'Ghost Kitchen',icon:'👻',type:'mobile',color:'#4527a0'},
-  {name:'Tiffin Service',icon:'🥡',type:'mobile',color:'#f57c00'},
-  {name:'Dabba Service',icon:'📦',type:'mobile',color:'#e65100'},
-
-  // === LAPTOP CATEGORIES (250) ===
-  {name:'Code Editor',icon:'💻',type:'laptop',color:'#00f5ff'},
-  {name:'IDE Tools',icon:'⚙️',type:'laptop',color:'#1a237e'},
-  {name:'Version Control',icon:'🔀',type:'laptop',color:'#f4511e'},
-  {name:'CI/CD Pipeline',icon:'🔄',type:'laptop',color:'#1565c0'},
-  {name:'Docker Tools',icon:'🐳',type:'laptop',color:'#0277bd'},
-  {name:'Kubernetes',icon:'⚓',type:'laptop',color:'#326ce5'},
-  {name:'Cloud Platforms',icon:'☁️',type:'laptop',color:'#4285f4'},
-  {name:'Database GUI',icon:'🗄️',type:'laptop',color:'#00695c'},
-  {name:'API Testing',icon:'🔌',type:'laptop',color:'#ff6c37'},
-  {name:'Web Browser',icon:'🌐',type:'laptop',color:'#4285f4'},
-  {name:'Email Client',icon:'📧',type:'laptop',color:'#0f9d58'},
-  {name:'Office Suite',icon:'📊',type:'laptop',color:'#d32f2f'},
-  {name:'Word Processing',icon:'📝',type:'laptop',color:'#1565c0'},
-  {name:'Spreadsheet',icon:'📊',type:'laptop',color:'#1b5e20'},
-  {name:'Presentation',icon:'📊',type:'laptop',color:'#b71c1c'},
-  {name:'PDF Editor',icon:'📕',type:'laptop',color:'#c62828'},
-  {name:'Graphic Design',icon:'🎨',type:'laptop',color:'#e91e63'},
-  {name:'Photo Editor Pro',icon:'🖼️',type:'laptop',color:'#311b92'},
-  {name:'Video Editor Pro',icon:'🎬',type:'laptop',color:'#880e4f'},
-  {name:'Audio Production',icon:'🎚️',type:'laptop',color:'#1a237e'},
-  {name:'Music DAW',icon:'🎹',type:'laptop',color:'#4a148c'},
-  {name:'3D Modeling',icon:'🧊',type:'laptop',color:'#0d47a1'},
-  {name:'Animation Software',icon:'🎭',type:'laptop',color:'#7b1fa2'},
-  {name:'Game Engine',icon:'🎮',type:'laptop',color:'#b71c1c'},
-  {name:'AR/VR Dev',icon:'🕶️',type:'laptop',color:'#006064'},
-  {name:'Machine Learning',icon:'🤖',type:'laptop',color:'#0277bd'},
-  {name:'Data Science',icon:'📈',type:'laptop',color:'#1a237e'},
-  {name:'Data Visualization',icon:'📊',type:'laptop',color:'#4527a0'},
-  {name:'Jupyter Notebook',icon:'📓',type:'laptop',color:'#ef6c00'},
-  {name:'Python IDE',icon:'🐍',type:'laptop',color:'#1565c0'},
-  {name:'JavaScript Tools',icon:'🟨',type:'laptop',color:'#f57f17'},
-  {name:'React Dev',icon:'⚛️',type:'laptop',color:'#00bcd4'},
-  {name:'Vue Dev',icon:'💚',type:'laptop',color:'#2e7d32'},
-  {name:'Angular Tools',icon:'🔴',type:'laptop',color:'#c62828'},
-  {name:'Node.js Tools',icon:'🟢',type:'laptop',color:'#388e3c'},
-  {name:'PHP Dev',icon:'🐘',type:'laptop',color:'#4527a0'},
-  {name:'Java IDE',icon:'☕',type:'laptop',color:'#f57c00'},
-  {name:'C++ Tools',icon:'⚡',type:'laptop',color:'#1565c0'},
-  {name:'Rust Dev',icon:'🦀',type:'laptop',color:'#bf360c'},
-  {name:'Go Lang Tools',icon:'🔵',type:'laptop',color:'#00acc1'},
-  {name:'Swift Dev',icon:'🐦',type:'laptop',color:'#f4511e'},
-  {name:'Kotlin Dev',icon:'🟣',type:'laptop',color:'#7b1fa2'},
-  {name:'Flutter Dev',icon:'💙',type:'laptop',color:'#0277bd'},
-  {name:'React Native',icon:'📱',type:'laptop',color:'#00bcd4'},
-  {name:'Electron Apps',icon:'⚡',type:'laptop',color:'#1a237e'},
-  {name:'Terminal Tools',icon:'🖥️',type:'laptop',color:'#212121'},
-  {name:'SSH Client',icon:'🔑',type:'laptop',color:'#37474f'},
-  {name:'FTP Client',icon:'📤',type:'laptop',color:'#1565c0'},
-  {name:'Network Monitor',icon:'📡',type:'laptop',color:'#00695c'},
-  {name:'Packet Analyzer',icon:'🔍',type:'laptop',color:'#1a237e'},
-  {name:'Firewall Tools',icon:'🔥',type:'laptop',color:'#c62828'},
-  {name:'Penetration Test',icon:'🛡️',type:'laptop',color:'#212121'},
-  {name:'Security Scanner',icon:'🔐',type:'laptop',color:'#1565c0'},
-  {name:'Password Gen',icon:'🔑',type:'laptop',color:'#6a1b9a'},
-  {name:'Encryption Tools',icon:'🔒',type:'laptop',color:'#37474f'},
-  {name:'VPN Software',icon:'🌐',type:'laptop',color:'#1a237e'},
-  {name:'Proxy Tools',icon:'↔️',type:'laptop',color:'#455a64'},
-  {name:'Project Management',icon:'📋',type:'laptop',color:'#0277bd'},
-  {name:'Agile Tools',icon:'🔄',type:'laptop',color:'#1565c0'},
-  {name:'Scrum Software',icon:'♻️',type:'laptop',color:'#00695c'},
-  {name:'Bug Tracker',icon:'🐛',type:'laptop',color:'#c62828'},
-  {name:'Documentation',icon:'📚',type:'laptop',color:'#0d47a1'},
-  {name:'Wiki Tools',icon:'📖',type:'laptop',color:'#37474f'},
-  {name:'Knowledge Base',icon:'🧠',type:'laptop',color:'#4527a0'},
-  {name:'CMS Software',icon:'🖥️',type:'laptop',color:'#1565c0'},
-  {name:'E-Commerce Platform',icon:'🛒',type:'laptop',color:'#ff6f00'},
-  {name:'Email Marketing',icon:'📧',type:'laptop',color:'#0f9d58'},
-  {name:'SEO Tools',icon:'🔍',type:'laptop',color:'#e53935'},
-  {name:'Analytics Platform',icon:'📊',type:'laptop',color:'#1a237e'},
-  {name:'A/B Testing',icon:'🔬',type:'laptop',color:'#0277bd'},
-  {name:'Heatmap Tools',icon:'🔥',type:'laptop',color:'#d32f2f'},
-  {name:'Social Media Mgmt',icon:'📱',type:'laptop',color:'#7b1fa2'},
-  {name:'Content Calendar',icon:'📅',type:'laptop',color:'#00695c'},
-  {name:'Copywriting AI',icon:'✍️',type:'laptop',color:'#1565c0'},
-  {name:'Grammar Check',icon:'✅',type:'laptop',color:'#2e7d32'},
-  {name:'Plagiarism Check',icon:'🔍',type:'laptop',color:'#c62828'},
-  {name:'Citation Manager',icon:'📚',type:'laptop',color:'#4527a0'},
-  {name:'Research Tools',icon:'🔬',type:'laptop',color:'#0277bd'},
-  {name:'Survey Builder',icon:'📝',type:'laptop',color:'#00695c'},
-  {name:'Form Builder',icon:'📋',type:'laptop',color:'#1565c0'},
-  {name:'CRM Software',icon:'👥',type:'laptop',color:'#0277bd'},
-  {name:'ERP System',icon:'⚙️',type:'laptop',color:'#37474f'},
-  {name:'HR Software',icon:'👔',type:'laptop',color:'#1a237e'},
-  {name:'Payroll System',icon:'💰',type:'laptop',color:'#2e7d32'},
-  {name:'Accounting Pro',icon:'🧾',type:'laptop',color:'#1b5e20'},
-  {name:'Tax Software',icon:'💵',type:'laptop',color:'#0d47a1'},
-  {name:'Invoicing Pro',icon:'📄',type:'laptop',color:'#1565c0'},
-  {name:'Supply Chain',icon:'🔗',type:'laptop',color:'#37474f'},
-  {name:'Warehouse Mgmt',icon:'🏭',type:'laptop',color:'#455a64'},
-  {name:'Fleet Management',icon:'🚚',type:'laptop',color:'#1565c0'},
-  {name:'Field Service',icon:'🔧',type:'laptop',color:'#bf360c'},
-  {name:'Help Desk',icon:'🎧',type:'laptop',color:'#0277bd'},
-  {name:'Customer Support',icon:'💬',type:'laptop',color:'#7b1fa2'},
-  {name:'Live Chat',icon:'💬',type:'laptop',color:'#00695c'},
-  {name:'Chatbot Builder',icon:'🤖',type:'laptop',color:'#1565c0'},
-  {name:'AI Tools',icon:'✨',type:'laptop',color:'#4527a0'},
-  {name:'NLP Software',icon:'🗣️',type:'laptop',color:'#0277bd'},
-  {name:'Computer Vision',icon:'👁️',type:'laptop',color:'#1a237e'},
-  {name:'Robotics Dev',icon:'🤖',type:'laptop',color:'#37474f'},
-  {name:'IoT Platform',icon:'📡',type:'laptop',color:'#00695c'},
-  {name:'Blockchain Dev',icon:'⛓️',type:'laptop',color:'#f57c00'},
-  {name:'Smart Contract',icon:'📜',type:'laptop',color:'#1565c0'},
-  {name:'DeFi Tools',icon:'💱',type:'laptop',color:'#388e3c'},
-  {name:'NFT Creator Pro',icon:'🖼️',type:'laptop',color:'#4527a0'},
-  {name:'Crypto Trading Bot',icon:'🤖',type:'laptop',color:'#f57f17'},
-  {name:'Quant Finance',icon:'📈',type:'laptop',color:'#1a237e'},
-  {name:'Risk Analysis',icon:'⚖️',type:'laptop',color:'#c62828'},
-  {name:'Portfolio Tracker',icon:'💼',type:'laptop',color:'#2e7d32'},
-  {name:'Financial Model',icon:'📊',type:'laptop',color:'#0277bd'},
-  {name:'Business Intel',icon:'🧠',type:'laptop',color:'#7b1fa2'},
-  {name:'Dashboard Builder',icon:'📊',type:'laptop',color:'#1565c0'},
-  {name:'Report Generator',icon:'📋',type:'laptop',color:'#00695c'},
-  {name:'ETL Tools',icon:'🔄',type:'laptop',color:'#37474f'},
-  {name:'Big Data',icon:'💾',type:'laptop',color:'#1a237e'},
-  {name:'Data Pipeline',icon:'🔀',type:'laptop',color:'#0277bd'},
-  {name:'ML Ops',icon:'⚙️',type:'laptop',color:'#1565c0'},
-  {name:'Neural Network',icon:'🧠',type:'laptop',color:'#4527a0'},
-  {name:'Deep Learning',icon:'🤖',type:'laptop',color:'#0d47a1'},
-  {name:'Computer Algebra',icon:'➕',type:'laptop',color:'#c62828'},
-  {name:'Statistical Tools',icon:'📊',type:'laptop',color:'#00695c'},
-  {name:'Simulation Software',icon:'🔬',type:'laptop',color:'#1565c0'},
-  {name:'CAD Software',icon:'📐',type:'laptop',color:'#37474f'},
-  {name:'CAM Tools',icon:'⚙️',type:'laptop',color:'#455a64'},
-  {name:'BIM Software',icon:'🏗️',type:'laptop',color:'#0277bd'},
-  {name:'Architecture CAD',icon:'🏛️',type:'laptop',color:'#795548'},
-  {name:'Engineering Tools',icon:'🔧',type:'laptop',color:'#37474f'},
-  {name:'Circuit Design',icon:'⚡',type:'laptop',color:'#f57f17'},
-  {name:'PCB Design',icon:'🔌',type:'laptop',color:'#1565c0'},
-  {name:'Embedded Dev',icon:'💻',type:'laptop',color:'#1a237e'},
-  {name:'FPGA Tools',icon:'⚡',type:'laptop',color:'#c62828'},
-  {name:'Signal Processing',icon:'📡',type:'laptop',color:'#0277bd'},
-  {name:'GIS Software',icon:'🗺️',type:'laptop',color:'#388e3c'},
-  {name:'Remote Sensing',icon:'🛰️',type:'laptop',color:'#1a237e'},
-  {name:'Drone Software',icon:'🚁',type:'laptop',color:'#0277bd'},
-  {name:'Medical Imaging',icon:'🔬',type:'laptop',color:'#0d47a1'},
-  {name:'Genomics Tools',icon:'🧬',type:'laptop',color:'#2e7d32'},
-  {name:'Lab Software',icon:'🧪',type:'laptop',color:'#1565c0'},
-  {name:'Chemistry Tools',icon:'⚗️',type:'laptop',color:'#7b1fa2'},
-  {name:'Physics Sim',icon:'⚛️',type:'laptop',color:'#0277bd'},
-  {name:'Astronomy Tools',icon:'🔭',type:'laptop',color:'#1a237e'},
-  {name:'Weather Model',icon:'🌤️',type:'laptop',color:'#0288d1'},
-  {name:'Climate Sim',icon:'🌍',type:'laptop',color:'#388e3c'},
-  {name:'Fluid Dynamics',icon:'🌊',type:'laptop',color:'#0277bd'},
-  {name:'FEM Analysis',icon:'📐',type:'laptop',color:'#37474f'},
-  {name:'Optimization Tools',icon:'⚡',type:'laptop',color:'#f57f17'},
-  {name:'Linear Programming',icon:'📈',type:'laptop',color:'#1a237e'},
-  {name:'Operations Research',icon:'🔍',type:'laptop',color:'#1565c0'},
-  {name:'Supply Analytics',icon:'📊',type:'laptop',color:'#00695c'},
-  {name:'Forecasting Tools',icon:'🔮',type:'laptop',color:'#7b1fa2'},
-  {name:'Time Series',icon:'📈',type:'laptop',color:'#0277bd'},
-  {name:'Econometrics',icon:'💹',type:'laptop',color:'#1a237e'},
-  {name:'Social Analytics',icon:'👥',type:'laptop',color:'#e91e63'},
-  {name:'Text Mining',icon:'⛏️',type:'laptop',color:'#37474f'},
-  {name:'Web Scraping',icon:'🕷️',type:'laptop',color:'#212121'},
-  {name:'Data Cleaning',icon:'🧹',type:'laptop',color:'#0277bd'},
-  {name:'Master Data Mgmt',icon:'🗄️',type:'laptop',color:'#1565c0'},
-  {name:'Data Governance',icon:'🔏',type:'laptop',color:'#37474f'},
-  {name:'Privacy Tools',icon:'🛡️',type:'laptop',color:'#1a237e'},
-  {name:'Compliance Mgmt',icon:'✅',type:'laptop',color:'#2e7d32'},
-  {name:'Audit Software',icon:'🔍',type:'laptop',color:'#455a64'},
-  {name:'Legal Software',icon:'⚖️',type:'laptop',color:'#212121'},
-  {name:'Contract Mgmt',icon:'📜',type:'laptop',color:'#1565c0'},
-  {name:'Patent Tools',icon:'🔒',type:'laptop',color:'#0277bd'},
-  {name:'IP Management',icon:'💡',type:'laptop',color:'#f57f17'},
-  {name:'Trademark Tools',icon:'™️',type:'laptop',color:'#1a237e'},
-  {name:'Real Estate CRM',icon:'🏠',type:'laptop',color:'#795548'},
-  {name:'Property Mgmt',icon:'🏗️',type:'laptop',color:'#37474f'},
-  {name:'Construction Mgmt',icon:'👷',type:'laptop',color:'#f57c00'},
-  {name:'Facility Mgmt',icon:'🏢',type:'laptop',color:'#455a64'},
-  {name:'Energy Management',icon:'⚡',type:'laptop',color:'#f57f17'},
-  {name:'Utilities Software',icon:'🔧',type:'laptop',color:'#1565c0'},
-  {name:'Renewable Energy',icon:'☀️',type:'laptop',color:'#ff8f00'},
-  {name:'Smart Grid',icon:'⚡',type:'laptop',color:'#0277bd'},
-  {name:'Water Management',icon:'💧',type:'laptop',color:'#0288d1'},
-  {name:'Agriculture Tech',icon:'🌾',type:'laptop',color:'#388e3c'},
-  {name:'Precision Farming',icon:'🚜',type:'laptop',color:'#558b2f'},
-  {name:'Livestock Mgmt',icon:'🐄',type:'laptop',color:'#795548'},
-  {name:'Food Safety',icon:'✅',type:'laptop',color:'#2e7d32'},
-  {name:'Quality Control',icon:'🔍',type:'laptop',color:'#1565c0'},
-  {name:'Manufacturing MES',icon:'🏭',type:'laptop',color:'#37474f'},
-  {name:'Lean Tools',icon:'⚡',type:'laptop',color:'#f57f17'},
-  {name:'Six Sigma Tools',icon:'📊',type:'laptop',color:'#0277bd'},
-  {name:'ISO Tools',icon:'📋',type:'laptop',color:'#1a237e'},
-  {name:'Maintenance CMMS',icon:'🔧',type:'laptop',color:'#455a64'},
-  {name:'Asset Management',icon:'💰',type:'laptop',color:'#2e7d32'},
-  {name:'Procurement Tools',icon:'🛒',type:'laptop',color:'#1565c0'},
-  {name:'Vendor Portal',icon:'🏢',type:'laptop',color:'#37474f'},
-  {name:'Logistics Platform',icon:'🚚',type:'laptop',color:'#1a237e'},
-  {name:'Transport Mgmt',icon:'🚌',type:'laptop',color:'#0277bd'},
-  {name:'Route Planning',icon:'🗺️',type:'laptop',color:'#388e3c'},
-  {name:'Last Mile Delivery',icon:'📦',type:'laptop',color:'#f57c00'},
-  {name:'Cold Chain',icon:'❄️',type:'laptop',color:'#0288d1'},
-  {name:'Customs Software',icon:'🛃',type:'laptop',color:'#37474f'},
-  {name:'Trade Finance',icon:'💱',type:'laptop',color:'#1565c0'},
-  {name:'Insurance Platform',icon:'🛡️',type:'laptop',color:'#1a237e'},
-  {name:'Actuarial Tools',icon:'📊',type:'laptop',color:'#4527a0'},
-  {name:'Fraud Detection',icon:'🔍',type:'laptop',color:'#c62828'},
-  {name:'Anti-Money Laundering',icon:'🔏',type:'laptop',color:'#1a237e'},
-  {name:'RegTech',icon:'✅',type:'laptop',color:'#0277bd'},
-  {name:'FinTech Platform',icon:'💳',type:'laptop',color:'#388e3c'},
-  {name:'Payment Gateway',icon:'💰',type:'laptop',color:'#2e7d32'},
-  {name:'Open Banking',icon:'🏦',type:'laptop',color:'#1565c0'},
-  {name:'Wealth Management',icon:'💎',type:'laptop',color:'#f57f17'},
-  {name:'Fund Accounting',icon:'📊',type:'laptop',color:'#1a237e'},
-  {name:'Treasury Mgmt',icon:'💰',type:'laptop',color:'#1b5e20'},
-  {name:'Derivatives Tools',icon:'📈',type:'laptop',color:'#c62828'},
-  {name:'Fixed Income',icon:'📊',type:'laptop',color:'#0277bd'},
-  {name:'Equity Research',icon:'🔍',type:'laptop',color:'#1a237e'},
-  {name:'Market Data',icon:'📡',type:'laptop',color:'#37474f'},
-  {name:'Trading Platform',icon:'💹',type:'laptop',color:'#2e7d32'},
-  {name:'Algo Trading',icon:'🤖',type:'laptop',color:'#1565c0'},
-  {name:'Hedge Fund Tools',icon:'🏦',type:'laptop',color:'#212121'},
-  {name:'Private Equity',icon:'💼',type:'laptop',color:'#37474f'},
-  {name:'Venture Capital',icon:'🚀',type:'laptop',color:'#7b1fa2'},
-  {name:'M&A Software',icon:'🤝',type:'laptop',color:'#1a237e'},
-  {name:'Due Diligence',icon:'🔍',type:'laptop',color:'#455a64'},
-  {name:'Valuation Tools',icon:'💰',type:'laptop',color:'#1565c0'},
-  {name:'Cap Table Mgmt',icon:'📊',type:'laptop',color:'#0277bd'},
-  {name:'Investor Portal',icon:'📈',type:'laptop',color:'#2e7d32'},
-  {name:'Board Software',icon:'📋',type:'laptop',color:'#37474f'},
-  {name:'Meeting Tools',icon:'👥',type:'laptop',color:'#0277bd'},
-  {name:'Virtual Events',icon:'🎪',type:'laptop',color:'#7b1fa2'},
-  {name:'Webinar Platform',icon:'📹',type:'laptop',color:'#1565c0'},
-  {name:'Online Learning LMS',icon:'🎓',type:'laptop',color:'#1a237e'},
-  {name:'Course Builder',icon:'📚',type:'laptop',color:'#0277bd'},
-  {name:'Assessment Tools',icon:'📝',type:'laptop',color:'#00695c'},
-  {name:'Certification Mgmt',icon:'🏆',type:'laptop',color:'#f57f17'},
-  {name:'Talent Management',icon:'⭐',type:'laptop',color:'#1565c0'},
-  {name:'Recruitment ATS',icon:'👔',type:'laptop',color:'#1a237e'},
-  {name:'Onboarding Tools',icon:'👋',type:'laptop',color:'#0277bd'},
-  {name:'Performance Review',icon:'📊',type:'laptop',color:'#37474f'},
-  {name:'Employee Survey',icon:'📝',type:'laptop',color:'#2e7d32'},
-  {name:'Benefits Admin',icon:'💊',type:'laptop',color:'#1565c0'},
-  {name:'Time & Attendance',icon:'⏱️',type:'laptop',color:'#0277bd'},
-  {name:'Leave Management',icon:'📅',type:'laptop',color:'#00695c'},
-  {name:'Workforce Planning',icon:'📈',type:'laptop',color:'#1a237e'},
-  {name:'Succession Plan',icon:'📊',type:'laptop',color:'#7b1fa2'},
-  {name:'Learning Path',icon:'🛤️',type:'laptop',color:'#0277bd'},
-  {name:'Mentoring Platform',icon:'🤝',type:'laptop',color:'#37474f'},
-  {name:'Employee Wellness',icon:'💚',type:'laptop',color:'#2e7d32'},
-  {name:'Culture Tools',icon:'🌟',type:'laptop',color:'#f57f17'},
-  {name:'Org Chart Tools',icon:'📊',type:'laptop',color:'#1565c0'},
-  {name:'Remote Work Tools',icon:'🏠',type:'laptop',color:'#0277bd'},
-  {name:'Collaboration Pro',icon:'👥',type:'laptop',color:'#7b1fa2'},
-  {name:'Virtual Office',icon:'🏢',type:'laptop',color:'#1a237e'},
-  {name:'Whiteboard Pro',icon:'✏️',type:'laptop',color:'#0277bd'},
-  {name:'Brainstorm Tools',icon:'💡',type:'laptop',color:'#f57f17'},
-  {name:'Design System',icon:'🎨',type:'laptop',color:'#e91e63'},
-  {name:'UI Component Lib',icon:'🧩',type:'laptop',color:'#4527a0'},
-  {name:'Figma Plugins',icon:'🖼️',type:'laptop',color:'#f24e1e'},
-  {name:'Prototyping Tools',icon:'📱',type:'laptop',color:'#0277bd'},
-  {name:'UX Research',icon:'🔍',type:'laptop',color:'#00695c'},
-  {name:'Usability Testing',icon:'🧪',type:'laptop',color:'#1565c0'},
-  {name:'Accessibility Tools',icon:'♿',type:'laptop',color:'#1a237e'},
-  {name:'Icon Libraries',icon:'⭐',type:'laptop',color:'#f57f17'},
-  {name:'Font Management',icon:'🔤',type:'laptop',color:'#4527a0'},
-  {name:'Color Tools Pro',icon:'🎨',type:'laptop',color:'#e91e63'},
-  {name:'Brand Management',icon:'🏷️',type:'laptop',color:'#0277bd'},
-  {name:'Asset Library',icon:'🖼️',type:'laptop',color:'#7b1fa2'},
-  {name:'DAM Software',icon:'💾',type:'laptop',color:'#37474f'},
-  {name:'Print Production',icon:'🖨️',type:'laptop',color:'#455a64'},
-  {name:'Publishing Tools',icon:'📚',type:'laptop',color:'#1a237e'},
-  {name:'Typesetting',icon:'🔤',type:'laptop',color:'#4527a0'},
-  {name:'Illustration Pro',icon:'🖌️',type:'laptop',color:'#e91e63'},
-  {name:'Motion Graphics',icon:'🎬',type:'laptop',color:'#7b1fa2'},
-  {name:'VFX Software',icon:'✨',type:'laptop',color:'#0d47a1'},
-  {name:'Color Grading',icon:'🎨',type:'laptop',color:'#880e4f'},
-  {name:'Subtitle Tools',icon:'📝',type:'laptop',color:'#37474f'},
-  {name:'Podcast Production',icon:'🎙️',type:'laptop',color:'#8e44ad'},
-  {name:'Live Streaming',icon:'📡',type:'laptop',color:'#c62828'},
-  {name:'Screen Recording',icon:'🖥️',type:'laptop',color:'#1565c0'},
-  {name:'Video Compression',icon:'📦',type:'laptop',color:'#37474f'},
-  {name:'Media Server',icon:'🎬',type:'laptop',color:'#1a237e'},
-  {name:'CDN Tools',icon:'🌐',type:'laptop',color:'#0277bd'},
-  {name:'Streaming Platform',icon:'📺',type:'laptop',color:'#c62828'},
-  {name:'Game Dev Tools',icon:'🎮',type:'laptop',color:'#b71c1c'},
-  {name:'Level Design',icon:'🗺️',type:'laptop',color:'#388e3c'},
-  {name:'Asset Pipeline',icon:'⚙️',type:'laptop',color:'#37474f'},
-  {name:'Testing QA',icon:'🧪',type:'laptop',color:'#0277bd'},
-  {name:'Load Testing',icon:'⚡',type:'laptop',color:'#f57f17'},
-  {name:'Monitoring Tools',icon:'📊',type:'laptop',color:'#1565c0'},
-  {name:'Log Management',icon:'📋',type:'laptop',color:'#37474f'},
-  {name:'APM Software',icon:'📈',type:'laptop',color:'#0277bd'},
-  {name:'Incident Mgmt',icon:'🚨',type:'laptop',color:'#c62828'},
-  {name:'On-Call Tools',icon:'📟',type:'laptop',color:'#1a237e'},
-  {name:'Chaos Engineering',icon:'💥',type:'laptop',color:'#e91e63'},
-  {name:'Service Mesh',icon:'🕸️',type:'laptop',color:'#7b1fa2'},
-  {name:'API Gateway',icon:'🔌',type:'laptop',color:'#0277bd'},
-  {name:'GraphQL Tools',icon:'🔴',type:'laptop',color:'#e10098'},
-  {name:'gRPC Tools',icon:'🔵',type:'laptop',color:'#1565c0'},
-  {name:'Message Queue',icon:'📨',type:'laptop',color:'#f57c00'},
-  {name:'Event Streaming',icon:'⚡',type:'laptop',color:'#1a237e'},
-  {name:'Cache Tools',icon:'⚡',type:'laptop',color:'#c62828'},
-  {name:'Search Platform',icon:'🔍',type:'laptop',color:'#f04e98'},
-  {name:'Graph Database',icon:'🕸️',type:'laptop',color:'#0277bd'},
-  {name:'Time Series DB',icon:'📈',type:'laptop',color:'#1565c0'},
-  {name:'Vector Database',icon:'🧮',type:'laptop',color:'#4527a0'},
-  {name:'Object Storage',icon:'💾',type:'laptop',color:'#ff6f00'},
-  {name:'Backup Solutions',icon:'💾',type:'laptop',color:'#37474f'},
-  {name:'Disaster Recovery',icon:'🔄',type:'laptop',color:'#c62828'},
-  {name:'Infrastructure Mgmt',icon:'🏗️',type:'laptop',color:'#1a237e'},
-  {name:'Config Management',icon:'⚙️',type:'laptop',color:'#37474f'},
-  {name:'Secret Management',icon:'🔐',type:'laptop',color:'#212121'},
-  {name:'Identity Provider',icon:'👤',type:'laptop',color:'#0277bd'},
-  {name:'SSO Tools',icon:'🔑',type:'laptop',color:'#1565c0'},
-  {name:'Zero Trust',icon:'🛡️',type:'laptop',color:'#1a237e'},
-  {name:'SIEM Platform',icon:'🔍',type:'laptop',color:'#c62828'},
-  {name:'SOC Tools',icon:'🏢',type:'laptop',color:'#37474f'},
-  {name:'Threat Intel',icon:'🎯',type:'laptop',color:'#b71c1c'},
-  {name:'Malware Analysis',icon:'🦠',type:'laptop',color:'#d32f2f'},
+// ── DATA ──────────────────────────────────────────────
+const CATS=[
+  {n:'Social Media',i:'📱',t:'mobile',c:'#ff006e'},
+  {n:'Instant Messaging',i:'💬',t:'mobile',c:'#00f5ff'},
+  {n:'Video Calling',i:'📹',t:'mobile',c:'#7c3aed'},
+  {n:'Dating Apps',i:'❤️',t:'mobile',c:'#ff4757'},
+  {n:'Short Video',i:'🎬',t:'mobile',c:'#ff6b35'},
+  {n:'Photo Editing',i:'📸',t:'mobile',c:'#ffd700'},
+  {n:'Music Streaming',i:'🎵',t:'mobile',c:'#1db954'},
+  {n:'Podcast Apps',i:'🎙️',t:'mobile',c:'#8e44ad'},
+  {n:'Mobile Gaming',i:'🎮',t:'mobile',c:'#e74c3c'},
+  {n:'Casual Games',i:'🎡',t:'mobile',c:'#f39c12'},
+  {n:'RPG Games',i:'⚔️',t:'mobile',c:'#8b0000'},
+  {n:'Puzzle Games',i:'🧩',t:'mobile',c:'#3498db'},
+  {n:'Racing Games',i:'🏎️',t:'mobile',c:'#e67e22'},
+  {n:'Sports Games',i:'⚽',t:'mobile',c:'#27ae60'},
+  {n:'Strategy Games',i:'♟️',t:'mobile',c:'#2c3e50'},
+  {n:'Card Games',i:'🃏',t:'mobile',c:'#c0392b'},
+  {n:'Word Games',i:'🔤',t:'mobile',c:'#16a085'},
+  {n:'Trivia Games',i:'❓',t:'mobile',c:'#8e44ad'},
+  {n:'AR Games',i:'🕶️',t:'mobile',c:'#00bcd4'},
+  {n:'Music Games',i:'🎸',t:'mobile',c:'#ff5722'},
+  {n:'Food Delivery',i:'🍕',t:'mobile',c:'#ff6f00'},
+  {n:'Grocery Apps',i:'🛒',t:'mobile',c:'#2e7d32'},
+  {n:'Restaurant Finder',i:'🍽️',t:'mobile',c:'#bf360c'},
+  {n:'Recipe Apps',i:'👨‍🍳',t:'mobile',c:'#e65100'},
+  {n:'Diet Tracker',i:'🥗',t:'mobile',c:'#558b2f'},
+  {n:'Calorie Counter',i:'🔢',t:'mobile',c:'#00838f'},
+  {n:'Water Tracker',i:'💧',t:'mobile',c:'#0288d1'},
+  {n:'Fasting Apps',i:'⏱️',t:'mobile',c:'#6a1b9a'},
+  {n:'Meditation',i:'🧘',t:'mobile',c:'#4527a0'},
+  {n:'Yoga Apps',i:'🏃',t:'mobile',c:'#00695c'},
+  {n:'Sleep Tracker',i:'😴',t:'mobile',c:'#1a237e'},
+  {n:'Fitness Tracker',i:'🏋️',t:'mobile',c:'#b71c1c'},
+  {n:'Running Apps',i:'🏃‍♂️',t:'mobile',c:'#e91e63'},
+  {n:'Cycling Apps',i:'🚴',t:'mobile',c:'#4caf50'},
+  {n:'Gym Workouts',i:'💪',t:'mobile',c:'#f44336'},
+  {n:'Period Tracker',i:'🌙',t:'mobile',c:'#9c27b0'},
+  {n:'Baby Monitor',i:'👶',t:'mobile',c:'#ff8a80'},
+  {n:'Kids Education',i:'📚',t:'mobile',c:'#ffb300'},
+  {n:'Language Learning',i:'🌍',t:'mobile',c:'#00acc1'},
+  {n:'Flashcard Apps',i:'🃏',t:'mobile',c:'#7e57c2'},
+  {n:'Study Timer',i:'⏲️',t:'mobile',c:'#26a69a'},
+  {n:'Note Taking',i:'📝',t:'mobile',c:'#ffa726'},
+  {n:'Journal Apps',i:'📓',t:'mobile',c:'#ab47bc'},
+  {n:'To-Do Lists',i:'✅',t:'mobile',c:'#42a5f5'},
+  {n:'Habit Tracker',i:'🔄',t:'mobile',c:'#26c6da'},
+  {n:'Goal Setting',i:'🎯',t:'mobile',c:'#ef5350'},
+  {n:'Mind Mapping',i:'🗺️',t:'mobile',c:'#66bb6a'},
+  {n:'Password Manager',i:'🔐',t:'mobile',c:'#5c6bc0'},
+  {n:'VPN Apps',i:'🛡️',t:'mobile',c:'#78909c'},
+  {n:'Antivirus Mobile',i:'🦠',t:'mobile',c:'#d32f2f'},
+  {n:'File Manager',i:'📁',t:'mobile',c:'#0277bd'},
+  {n:'Cloud Storage',i:'☁️',t:'mobile',c:'#0097a7'},
+  {n:'QR Scanner',i:'📷',t:'mobile',c:'#37474f'},
+  {n:'Document Scanner',i:'📄',t:'mobile',c:'#1565c0'},
+  {n:'PDF Reader',i:'📕',t:'mobile',c:'#c62828'},
+  {n:'E-Book Reader',i:'📖',t:'mobile',c:'#4a148c'},
+  {n:'Audiobook Apps',i:'🔊',t:'mobile',c:'#e65100'},
+  {n:'News Apps',i:'📰',t:'mobile',c:'#212121'},
+  {n:'Weather Apps',i:'🌤️',t:'mobile',c:'#0288d1'},
+  {n:'Maps Navigation',i:'🗺️',t:'mobile',c:'#388e3c'},
+  {n:'Traffic Apps',i:'🚦',t:'mobile',c:'#f57f17'},
+  {n:'Taxi Booking',i:'🚕',t:'mobile',c:'#f9a825'},
+  {n:'Bus Tracker',i:'🚌',t:'mobile',c:'#1976d2'},
+  {n:'Flight Booking',i:'✈️',t:'mobile',c:'#0288d1'},
+  {n:'Hotel Booking',i:'🏨',t:'mobile',c:'#7b1fa2'},
+  {n:'Travel Planner',i:'🌏',t:'mobile',c:'#00796b'},
+  {n:'Currency Converter',i:'💱',t:'mobile',c:'#388e3c'},
+  {n:'Banking Apps',i:'🏦',t:'mobile',c:'#1a237e'},
+  {n:'UPI Payment',i:'💳',t:'mobile',c:'#00796b'},
+  {n:'Crypto Wallet',i:'₿',t:'mobile',c:'#f57c00'},
+  {n:'Stock Trading',i:'📈',t:'mobile',c:'#2e7d32'},
+  {n:'Mutual Funds',i:'💰',t:'mobile',c:'#1565c0'},
+  {n:'Insurance Apps',i:'🛡️',t:'mobile',c:'#283593'},
+  {n:'Loan Apps',i:'💵',t:'mobile',c:'#1b5e20'},
+  {n:'Expense Tracker',i:'💸',t:'mobile',c:'#bf360c'},
+  {n:'Bill Splitter',i:'🧾',t:'mobile',c:'#004d40'},
+  {n:'Savings Goals',i:'🏦',t:'mobile',c:'#0d47a1'},
+  {n:'Shopping Apps',i:'🛍️',t:'mobile',c:'#ad1457'},
+  {n:'Fashion Shopping',i:'👗',t:'mobile',c:'#880e4f'},
+  {n:'Electronics Store',i:'💻',t:'mobile',c:'#1a237e'},
+  {n:'Beauty Apps',i:'💄',t:'mobile',c:'#c2185b'},
+  {n:'Skincare Tracker',i:'✨',t:'mobile',c:'#f48fb1'},
+  {n:'Hair Style',i:'💇',t:'mobile',c:'#6d4c41'},
+  {n:'Clothing Resale',i:'👔',t:'mobile',c:'#5d4037'},
+  {n:'Furniture Shopping',i:'🛋️',t:'mobile',c:'#8d6e63'},
+  {n:'Pet Care Apps',i:'🐾',t:'mobile',c:'#795548'},
+  {n:'Plant Care',i:'🌿',t:'mobile',c:'#2e7d32'},
+  {n:'Home Automation',i:'🏠',t:'mobile',c:'#0277bd'},
+  {n:'Smart Home',i:'💡',t:'mobile',c:'#f57f17'},
+  {n:'Security Cam',i:'📷',t:'mobile',c:'#37474f'},
+  {n:'Parental Control',i:'👨‍👩‍👧',t:'mobile',c:'#1565c0'},
+  {n:'Screen Time',i:'⏱️',t:'mobile',c:'#6a1b9a'},
+  {n:'Focus Apps',i:'🎯',t:'mobile',c:'#b71c1c'},
+  {n:'Alarm Clock',i:'⏰',t:'mobile',c:'#1a237e'},
+  {n:'Calculator',i:'🔢',t:'mobile',c:'#37474f'},
+  {n:'Compass Apps',i:'🧭',t:'mobile',c:'#00695c'},
+  {n:'Unit Converter',i:'🔄',t:'mobile',c:'#00838f'},
+  {n:'BMI Calculator',i:'⚖️',t:'mobile',c:'#4caf50'},
+  {n:'Heart Rate',i:'❤️‍🔥',t:'mobile',c:'#e53935'},
+  {n:'Blood Pressure',i:'🩺',t:'mobile',c:'#c62828'},
+  {n:'Medicine Reminder',i:'💊',t:'mobile',c:'#1565c0'},
+  {n:'Doctor Booking',i:'👨‍⚕️',t:'mobile',c:'#0277bd'},
+  {n:'Health Record',i:'🏥',t:'mobile',c:'#00695c'},
+  {n:'Mental Health',i:'🧠',t:'mobile',c:'#7b1fa2'},
+  {n:'Therapy Apps',i:'🛋️',t:'mobile',c:'#6a1b9a'},
+  {n:'Breathing Exercise',i:'🌬️',t:'mobile',c:'#00acc1'},
+  {n:'Color Picker',i:'🎨',t:'mobile',c:'#f44336'},
+  {n:'Logo Maker',i:'✏️',t:'mobile',c:'#e91e63'},
+  {n:'Video Editor Mobile',i:'🎞️',t:'mobile',c:'#d32f2f'},
+  {n:'GIF Maker',i:'🎭',t:'mobile',c:'#f57c00'},
+  {n:'Meme Creator',i:'😂',t:'mobile',c:'#fbc02d'},
+  {n:'Sticker Maker',i:'⭐',t:'mobile',c:'#7b1fa2'},
+  {n:'Avatar Creator',i:'👤',t:'mobile',c:'#1565c0'},
+  {n:'AI Camera',i:'🤖',t:'mobile',c:'#00695c'},
+  {n:'Selfie Editor',i:'🤳',t:'mobile',c:'#ad1457'},
+  {n:'Beauty Filter',i:'💋',t:'mobile',c:'#c2185b'},
+  {n:'NFT Marketplace',i:'🖼️',t:'mobile',c:'#4527a0'},
+  {n:'Freelance Mobile',i:'💼',t:'mobile',c:'#1565c0'},
+  {n:'Resume Builder',i:'📋',t:'mobile',c:'#0d47a1'},
+  {n:'Job Search',i:'🔍',t:'mobile',c:'#1a237e'},
+  {n:'Interview Prep',i:'🎤',t:'mobile',c:'#6a1b9a'},
+  {n:'Invoice Generator',i:'🧾',t:'mobile',c:'#1b5e20'},
+  {n:'Team Chat',i:'👥',t:'mobile',c:'#7b1fa2'},
+  {n:'Task Manager Mobile',i:'📋',t:'mobile',c:'#00695c'},
+  {n:'CRM Mobile',i:'📊',t:'mobile',c:'#1565c0'},
+  {n:'Sales Tracker',i:'📈',t:'mobile',c:'#2e7d32'},
+  {n:'E-Commerce',i:'🛒',t:'mobile',c:'#ff6f00'},
+  {n:'Online Courses',i:'🎓',t:'mobile',c:'#1565c0'},
+  {n:'Coding Learn',i:'👨‍💻',t:'mobile',c:'#1a237e'},
+  {n:'Art Learning',i:'🎨',t:'mobile',c:'#e91e63'},
+  {n:'Music Learning',i:'🎼',t:'mobile',c:'#7b1fa2'},
+  {n:'Chess Mobile',i:'♟️',t:'mobile',c:'#212121'},
+  {n:'Sudoku',i:'🔢',t:'mobile',c:'#0277bd'},
+  {n:'Crossword',i:'📰',t:'mobile',c:'#37474f'},
+  {n:'Solitaire',i:'🃏',t:'mobile',c:'#c62828'},
+  {n:'Bingo Apps',i:'🎱',t:'mobile',c:'#7b1fa2'},
+  {n:'Sports Betting',i:'🏆',t:'mobile',c:'#1a237e'},
+  {n:'Fantasy Sports',i:'⚽',t:'mobile',c:'#1b5e20'},
+  {n:'Cricket Score',i:'🏏',t:'mobile',c:'#1565c0'},
+  {n:'Football Score',i:'⚽',t:'mobile',c:'#2e7d32'},
+  {n:'Live Sports',i:'📺',t:'mobile',c:'#d32f2f'},
+  {n:'Step Counter',i:'👟',t:'mobile',c:'#00695c'},
+  {n:'Hiking Trails',i:'⛰️',t:'mobile',c:'#388e3c'},
+  {n:'Golf Apps',i:'⛳',t:'mobile',c:'#2e7d32'},
+  {n:'Swimming Log',i:'🏊',t:'mobile',c:'#0288d1'},
+  {n:'Yoga Studio',i:'🧘‍♀️',t:'mobile',c:'#7b1fa2'},
+  {n:'Dance Apps',i:'🕺',t:'mobile',c:'#ad1457'},
+  {n:'Home Workout',i:'🏠',t:'mobile',c:'#c62828'},
+  {n:'Weight Loss',i:'⚖️',t:'mobile',c:'#4caf50'},
+  {n:'Vegan Apps',i:'🥦',t:'mobile',c:'#388e3c'},
+  {n:'Keto Diet',i:'🥑',t:'mobile',c:'#2e7d32'},
+  {n:'Meal Prep',i:'🍱',t:'mobile',c:'#e65100'},
+  {n:'Cooking Timer',i:'⏲️',t:'mobile',c:'#bf360c'},
+  {n:'Wine Guide',i:'🍷',t:'mobile',c:'#880e4f'},
+  {n:'Coffee Apps',i:'☕',t:'mobile',c:'#6d4c41'},
+  {n:'Cocktail Maker',i:'🍹',t:'mobile',c:'#e91e63'},
+  {n:'Bakery Apps',i:'🥐',t:'mobile',c:'#f57c00'},
+  {n:'Smoothie Maker',i:'🥤',t:'mobile',c:'#00695c'},
+  {n:'Restaurant Review',i:'⭐',t:'mobile',c:'#f57f17'},
+  {n:'Food Blogging',i:'📸',t:'mobile',c:'#e91e63'},
+  {n:'Table Booking',i:'🍽️',t:'mobile',c:'#bf360c'},
+  {n:'Street Food',i:'🌮',t:'mobile',c:'#f57c00'},
+  {n:'Tiffin Service',i:'🥡',t:'mobile',c:'#f57c00'},
+  {n:'Spice Guide',i:'🌶️',t:'mobile',c:'#d32f2f'},
+  {n:'BBQ Apps',i:'🔥',t:'mobile',c:'#bf360c'},
+  {n:'Chocolate Apps',i:'🍫',t:'mobile',c:'#6d4c41'},
+  {n:'Ice Cream',i:'🍦',t:'mobile',c:'#7b1fa2'},
+  {n:'Dessert Apps',i:'🍰',t:'mobile',c:'#ad1457'},
+  {n:'Burger Finder',i:'🍔',t:'mobile',c:'#e65100'},
+  {n:'Pizza Maker',i:'🍕',t:'mobile',c:'#bf360c'},
+  {n:'Sushi Guide',i:'🍣',t:'mobile',c:'#c62828'},
+  {n:'Ethnic Cuisine',i:'🍜',t:'mobile',c:'#ef6c00'},
+  {n:'Travel Food',i:'✈️',t:'mobile',c:'#0277bd'},
+  {n:'Chef Connect',i:'👨‍🍳',t:'mobile',c:'#37474f'},
+  {n:'Food Photography',i:'📷',t:'mobile',c:'#ad1457'},
+  {n:'Cloud Kitchen',i:'☁️',t:'mobile',c:'#0277bd'},
+  {n:'Organic Food',i:'🌱',t:'mobile',c:'#2e7d32'},
+  {n:'Nutrition Science',i:'🔬',t:'mobile',c:'#1565c0'},
+  {n:'Catering Apps',i:'👨‍🍳',t:'mobile',c:'#37474f'},
+  {n:'Farm to Table',i:'🌾',t:'mobile',c:'#558b2f'},
+  {n:'Fermentation',i:'🫙',t:'mobile',c:'#795548'},
+  {n:'Bread Baking',i:'🍞',t:'mobile',c:'#a1887f'},
+  {n:'Jam Making',i:'🍓',t:'mobile',c:'#c2185b'},
+  {n:'Hot Sauce',i:'🌶️',t:'mobile',c:'#d32f2f'},
+  {n:'Snack Finder',i:'🍿',t:'mobile',c:'#f57f17'},
+  {n:'Midnight Food',i:'🌙',t:'mobile',c:'#1a237e'},
+  {n:'Dabba Service',i:'📦',t:'mobile',c:'#e65100'},
+  {n:'Supplement Log',i:'💊',t:'mobile',c:'#1565c0'},
+  {n:'Protein Tracker',i:'💪',t:'mobile',c:'#e53935'},
+  {n:'Macro Counter',i:'🥩',t:'mobile',c:'#bf360c'},
+  {n:'Food Allergy',i:'⚠️',t:'mobile',c:'#f57f17'},
+  {n:'Juice Cleanse',i:'🍊',t:'mobile',c:'#ef6c00'},
+  {n:'Tea Guide',i:'🍵',t:'mobile',c:'#388e3c'},
+  {n:'Beer Guide',i:'🍺',t:'mobile',c:'#f57f17'},
+  {n:'Grilling Guide',i:'🥩',t:'mobile',c:'#c62828'},
+  {n:'Candy Making',i:'🍬',t:'mobile',c:'#e91e63'},
+  {n:'Pickle Guide',i:'🥒',t:'mobile',c:'#558b2f'},
+  {n:'Cheese Guide',i:'🧀',t:'mobile',c:'#fbc02d'},
+  {n:'Food Tour',i:'🗺️',t:'mobile',c:'#00695c'},
+  {n:'Ghost Kitchen',i:'👻',t:'mobile',c:'#4527a0'},
+  {n:'Pilates Apps',i:'💃',t:'mobile',c:'#e91e63'},
+  {n:'Martial Arts',i:'🥋',t:'mobile',c:'#c62828'},
+  {n:'Climbing Apps',i:'🧗',t:'mobile',c:'#795548'},
+  {n:'Ski Resort',i:'🎿',t:'mobile',c:'#1a237e'},
+  {n:'Surf Apps',i:'🌊',t:'mobile',c:'#0277bd'},
+  {n:'Tennis Tracker',i:'🎾',t:'mobile',c:'#f57f17'},
+  {n:'Bike Computer',i:'🚲',t:'mobile',c:'#1565c0'},
+  {n:'Stretch Timer',i:'⏱️',t:'mobile',c:'#00695c'},
+  {n:'Zumba Apps',i:'🎵',t:'mobile',c:'#f44336'},
+  {n:'Fitness Challenge',i:'🏆',t:'mobile',c:'#b71c1c'},
+  {n:'Sports News',i:'📰',t:'mobile',c:'#212121'},
+  {n:'Lottery Apps',i:'🎰',t:'mobile',c:'#f57f17'},
+  {n:'Mahjong',i:'🀄',t:'mobile',c:'#bf360c'},
+  {n:'Geography',i:'🌍',t:'mobile',c:'#388e3c'},
+  {n:'History Apps',i:'🏛️',t:'mobile',c:'#795548'},
+  {n:'Science Apps',i:'🔬',t:'mobile',c:'#0288d1'},
+  {n:'Math Helper',i:'➕',t:'mobile',c:'#e53935'},
+  {n:'Tutoring Apps',i:'✏️',t:'mobile',c:'#00695c'},
+  {n:'Business Cards',i:'🪪',t:'mobile',c:'#37474f'},
+  {n:'Timesheet',i:'⏱️',t:'mobile',c:'#0277bd'},
+  {n:'Inventory Mobile',i:'📦',t:'mobile',c:'#e65100'},
+  {n:'POS System',i:'💳',t:'mobile',c:'#1a237e'},
+  {n:'Dropshipping',i:'📦',t:'mobile',c:'#f57c00'},
+  {n:'Digital Products',i:'💾',t:'mobile',c:'#4527a0'},
+  {n:'Print on Demand',i:'🖨️',t:'mobile',c:'#37474f'},
+  // === LAPTOP 250 ===
+  {n:'Code Editor',i:'💻',t:'laptop',c:'#00f5ff'},
+  {n:'IDE Tools',i:'⚙️',t:'laptop',c:'#1a237e'},
+  {n:'Version Control',i:'🔀',t:'laptop',c:'#f4511e'},
+  {n:'CI/CD Pipeline',i:'🔄',t:'laptop',c:'#1565c0'},
+  {n:'Docker Tools',i:'🐳',t:'laptop',c:'#0277bd'},
+  {n:'Kubernetes',i:'⚓',t:'laptop',c:'#326ce5'},
+  {n:'Cloud Platforms',i:'☁️',t:'laptop',c:'#4285f4'},
+  {n:'Database GUI',i:'🗄️',t:'laptop',c:'#00695c'},
+  {n:'API Testing',i:'🔌',t:'laptop',c:'#ff6c37'},
+  {n:'Web Browser',i:'🌐',t:'laptop',c:'#4285f4'},
+  {n:'Email Client',i:'📧',t:'laptop',c:'#0f9d58'},
+  {n:'Office Suite',i:'📊',t:'laptop',c:'#d32f2f'},
+  {n:'Word Processing',i:'📝',t:'laptop',c:'#1565c0'},
+  {n:'Spreadsheet',i:'📊',t:'laptop',c:'#1b5e20'},
+  {n:'Presentation',i:'🖥️',t:'laptop',c:'#b71c1c'},
+  {n:'PDF Editor',i:'📕',t:'laptop',c:'#c62828'},
+  {n:'Graphic Design',i:'🎨',t:'laptop',c:'#e91e63'},
+  {n:'Photo Editor Pro',i:'🖼️',t:'laptop',c:'#311b92'},
+  {n:'Video Editor Pro',i:'🎬',t:'laptop',c:'#880e4f'},
+  {n:'Audio Production',i:'🎚️',t:'laptop',c:'#1a237e'},
+  {n:'Music DAW',i:'🎹',t:'laptop',c:'#4a148c'},
+  {n:'3D Modeling',i:'🧊',t:'laptop',c:'#0d47a1'},
+  {n:'Animation Software',i:'🎭',t:'laptop',c:'#7b1fa2'},
+  {n:'Game Engine',i:'🎮',t:'laptop',c:'#b71c1c'},
+  {n:'AR/VR Dev',i:'🕶️',t:'laptop',c:'#006064'},
+  {n:'Machine Learning',i:'🤖',t:'laptop',c:'#0277bd'},
+  {n:'Data Science',i:'📈',t:'laptop',c:'#1a237e'},
+  {n:'Data Visualization',i:'📊',t:'laptop',c:'#4527a0'},
+  {n:'Jupyter Notebook',i:'📓',t:'laptop',c:'#ef6c00'},
+  {n:'Python IDE',i:'🐍',t:'laptop',c:'#1565c0'},
+  {n:'JavaScript Tools',i:'🟨',t:'laptop',c:'#f57f17'},
+  {n:'React Dev',i:'⚛️',t:'laptop',c:'#00bcd4'},
+  {n:'Vue Dev',i:'💚',t:'laptop',c:'#2e7d32'},
+  {n:'Angular Tools',i:'🔴',t:'laptop',c:'#c62828'},
+  {n:'Node.js Tools',i:'🟢',t:'laptop',c:'#388e3c'},
+  {n:'PHP Dev',i:'🐘',t:'laptop',c:'#4527a0'},
+  {n:'Java IDE',i:'☕',t:'laptop',c:'#f57c00'},
+  {n:'C++ Tools',i:'⚡',t:'laptop',c:'#1565c0'},
+  {n:'Rust Dev',i:'🦀',t:'laptop',c:'#bf360c'},
+  {n:'Go Lang Tools',i:'🔵',t:'laptop',c:'#00acc1'},
+  {n:'Swift Dev',i:'🐦',t:'laptop',c:'#f4511e'},
+  {n:'Kotlin Dev',i:'🟣',t:'laptop',c:'#7b1fa2'},
+  {n:'Flutter Dev',i:'💙',t:'laptop',c:'#0277bd'},
+  {n:'React Native',i:'📱',t:'laptop',c:'#00bcd4'},
+  {n:'Electron Apps',i:'⚡',t:'laptop',c:'#1a237e'},
+  {n:'Terminal Tools',i:'🖥️',t:'laptop',c:'#212121'},
+  {n:'SSH Client',i:'🔑',t:'laptop',c:'#37474f'},
+  {n:'FTP Client',i:'📤',t:'laptop',c:'#1565c0'},
+  {n:'Network Monitor',i:'📡',t:'laptop',c:'#00695c'},
+  {n:'Packet Analyzer',i:'🔍',t:'laptop',c:'#1a237e'},
+  {n:'Firewall Tools',i:'🔥',t:'laptop',c:'#c62828'},
+  {n:'Penetration Test',i:'🛡️',t:'laptop',c:'#212121'},
+  {n:'Security Scanner',i:'🔐',t:'laptop',c:'#1565c0'},
+  {n:'Password Gen',i:'🔑',t:'laptop',c:'#6a1b9a'},
+  {n:'Encryption Tools',i:'🔒',t:'laptop',c:'#37474f'},
+  {n:'VPN Software',i:'🌐',t:'laptop',c:'#1a237e'},
+  {n:'Proxy Tools',i:'↔️',t:'laptop',c:'#455a64'},
+  {n:'Project Management',i:'📋',t:'laptop',c:'#0277bd'},
+  {n:'Agile Tools',i:'🔄',t:'laptop',c:'#1565c0'},
+  {n:'Scrum Software',i:'♻️',t:'laptop',c:'#00695c'},
+  {n:'Bug Tracker',i:'🐛',t:'laptop',c:'#c62828'},
+  {n:'Documentation',i:'📚',t:'laptop',c:'#0d47a1'},
+  {n:'Wiki Tools',i:'📖',t:'laptop',c:'#37474f'},
+  {n:'Knowledge Base',i:'🧠',t:'laptop',c:'#4527a0'},
+  {n:'CMS Software',i:'🖥️',t:'laptop',c:'#1565c0'},
+  {n:'E-Commerce Platform',i:'🛒',t:'laptop',c:'#ff6f00'},
+  {n:'Email Marketing',i:'📧',t:'laptop',c:'#0f9d58'},
+  {n:'SEO Tools',i:'🔍',t:'laptop',c:'#e53935'},
+  {n:'Analytics Platform',i:'📊',t:'laptop',c:'#1a237e'},
+  {n:'A/B Testing',i:'🔬',t:'laptop',c:'#0277bd'},
+  {n:'Heatmap Tools',i:'🔥',t:'laptop',c:'#d32f2f'},
+  {n:'Social Media Mgmt',i:'📱',t:'laptop',c:'#7b1fa2'},
+  {n:'Content Calendar',i:'📅',t:'laptop',c:'#00695c'},
+  {n:'Copywriting AI',i:'✍️',t:'laptop',c:'#1565c0'},
+  {n:'Grammar Check',i:'✅',t:'laptop',c:'#2e7d32'},
+  {n:'Plagiarism Check',i:'🔍',t:'laptop',c:'#c62828'},
+  {n:'Research Tools',i:'🔬',t:'laptop',c:'#0277bd'},
+  {n:'Survey Builder',i:'📝',t:'laptop',c:'#00695c'},
+  {n:'Form Builder',i:'📋',t:'laptop',c:'#1565c0'},
+  {n:'CRM Software',i:'👥',t:'laptop',c:'#0277bd'},
+  {n:'ERP System',i:'⚙️',t:'laptop',c:'#37474f'},
+  {n:'HR Software',i:'👔',t:'laptop',c:'#1a237e'},
+  {n:'Payroll System',i:'💰',t:'laptop',c:'#2e7d32'},
+  {n:'Accounting Pro',i:'🧾',t:'laptop',c:'#1b5e20'},
+  {n:'Tax Software',i:'💵',t:'laptop',c:'#0d47a1'},
+  {n:'Invoicing Pro',i:'📄',t:'laptop',c:'#1565c0'},
+  {n:'Supply Chain',i:'🔗',t:'laptop',c:'#37474f'},
+  {n:'Warehouse Mgmt',i:'🏭',t:'laptop',c:'#455a64'},
+  {n:'Fleet Management',i:'🚚',t:'laptop',c:'#1565c0'},
+  {n:'Help Desk',i:'🎧',t:'laptop',c:'#0277bd'},
+  {n:'Customer Support',i:'💬',t:'laptop',c:'#7b1fa2'},
+  {n:'Live Chat',i:'💬',t:'laptop',c:'#00695c'},
+  {n:'Chatbot Builder',i:'🤖',t:'laptop',c:'#1565c0'},
+  {n:'AI Tools',i:'✨',t:'laptop',c:'#4527a0'},
+  {n:'NLP Software',i:'🗣️',t:'laptop',c:'#0277bd'},
+  {n:'Computer Vision',i:'👁️',t:'laptop',c:'#1a237e'},
+  {n:'Blockchain Dev',i:'⛓️',t:'laptop',c:'#f57c00'},
+  {n:'Smart Contract',i:'📜',t:'laptop',c:'#1565c0'},
+  {n:'DeFi Tools',i:'💱',t:'laptop',c:'#388e3c'},
+  {n:'NFT Creator Pro',i:'🖼️',t:'laptop',c:'#4527a0'},
+  {n:'Crypto Trading Bot',i:'🤖',t:'laptop',c:'#f57f17'},
+  {n:'Quant Finance',i:'📈',t:'laptop',c:'#1a237e'},
+  {n:'Portfolio Tracker',i:'💼',t:'laptop',c:'#2e7d32'},
+  {n:'Financial Model',i:'📊',t:'laptop',c:'#0277bd'},
+  {n:'Business Intel',i:'🧠',t:'laptop',c:'#7b1fa2'},
+  {n:'Dashboard Builder',i:'📊',t:'laptop',c:'#1565c0'},
+  {n:'Report Generator',i:'📋',t:'laptop',c:'#00695c'},
+  {n:'ETL Tools',i:'🔄',t:'laptop',c:'#37474f'},
+  {n:'Big Data',i:'💾',t:'laptop',c:'#1a237e'},
+  {n:'ML Ops',i:'⚙️',t:'laptop',c:'#1565c0'},
+  {n:'Neural Network',i:'🧠',t:'laptop',c:'#4527a0'},
+  {n:'Deep Learning',i:'🤖',t:'laptop',c:'#0d47a1'},
+  {n:'Statistical Tools',i:'📊',t:'laptop',c:'#00695c'},
+  {n:'Simulation Software',i:'🔬',t:'laptop',c:'#1565c0'},
+  {n:'CAD Software',i:'📐',t:'laptop',c:'#37474f'},
+  {n:'BIM Software',i:'🏗️',t:'laptop',c:'#0277bd'},
+  {n:'Architecture CAD',i:'🏛️',t:'laptop',c:'#795548'},
+  {n:'Circuit Design',i:'⚡',t:'laptop',c:'#f57f17'},
+  {n:'PCB Design',i:'🔌',t:'laptop',c:'#1565c0'},
+  {n:'Embedded Dev',i:'💻',t:'laptop',c:'#1a237e'},
+  {n:'GIS Software',i:'🗺️',t:'laptop',c:'#388e3c'},
+  {n:'Drone Software',i:'🚁',t:'laptop',c:'#0277bd'},
+  {n:'Medical Imaging',i:'🔬',t:'laptop',c:'#0d47a1'},
+  {n:'Genomics Tools',i:'🧬',t:'laptop',c:'#2e7d32'},
+  {n:'Lab Software',i:'🧪',t:'laptop',c:'#1565c0'},
+  {n:'Chemistry Tools',i:'⚗️',t:'laptop',c:'#7b1fa2'},
+  {n:'Physics Sim',i:'⚛️',t:'laptop',c:'#0277bd'},
+  {n:'Astronomy Tools',i:'🔭',t:'laptop',c:'#1a237e'},
+  {n:'Weather Model',i:'🌤️',t:'laptop',c:'#0288d1'},
+  {n:'Climate Sim',i:'🌍',t:'laptop',c:'#388e3c'},
+  {n:'FEM Analysis',i:'📐',t:'laptop',c:'#37474f'},
+  {n:'Forecasting Tools',i:'🔮',t:'laptop',c:'#7b1fa2'},
+  {n:'Time Series',i:'📈',t:'laptop',c:'#0277bd'},
+  {n:'Econometrics',i:'💹',t:'laptop',c:'#1a237e'},
+  {n:'Text Mining',i:'⛏️',t:'laptop',c:'#37474f'},
+  {n:'Web Scraping',i:'🕷️',t:'laptop',c:'#212121'},
+  {n:'Data Cleaning',i:'🧹',t:'laptop',c:'#0277bd'},
+  {n:'Data Governance',i:'🔏',t:'laptop',c:'#37474f'},
+  {n:'Privacy Tools',i:'🛡️',t:'laptop',c:'#1a237e'},
+  {n:'Compliance Mgmt',i:'✅',t:'laptop',c:'#2e7d32'},
+  {n:'Audit Software',i:'🔍',t:'laptop',c:'#455a64'},
+  {n:'Legal Software',i:'⚖️',t:'laptop',c:'#212121'},
+  {n:'Contract Mgmt',i:'📜',t:'laptop',c:'#1565c0'},
+  {n:'IP Management',i:'💡',t:'laptop',c:'#f57f17'},
+  {n:'Real Estate CRM',i:'🏠',t:'laptop',c:'#795548'},
+  {n:'Property Mgmt',i:'🏗️',t:'laptop',c:'#37474f'},
+  {n:'Construction Mgmt',i:'👷',t:'laptop',c:'#f57c00'},
+  {n:'Energy Management',i:'⚡',t:'laptop',c:'#f57f17'},
+  {n:'Renewable Energy',i:'☀️',t:'laptop',c:'#ff8f00'},
+  {n:'Smart Grid',i:'⚡',t:'laptop',c:'#0277bd'},
+  {n:'Agriculture Tech',i:'🌾',t:'laptop',c:'#388e3c'},
+  {n:'Precision Farming',i:'🚜',t:'laptop',c:'#558b2f'},
+  {n:'Quality Control',i:'🔍',t:'laptop',c:'#1565c0'},
+  {n:'Manufacturing MES',i:'🏭',t:'laptop',c:'#37474f'},
+  {n:'Lean Tools',i:'⚡',t:'laptop',c:'#f57f17'},
+  {n:'Six Sigma Tools',i:'📊',t:'laptop',c:'#0277bd'},
+  {n:'Maintenance CMMS',i:'🔧',t:'laptop',c:'#455a64'},
+  {n:'Asset Management',i:'💰',t:'laptop',c:'#2e7d32'},
+  {n:'Procurement Tools',i:'🛒',t:'laptop',c:'#1565c0'},
+  {n:'Logistics Platform',i:'🚚',t:'laptop',c:'#1a237e'},
+  {n:'Route Planning',i:'🗺️',t:'laptop',c:'#388e3c'},
+  {n:'Last Mile Delivery',i:'📦',t:'laptop',c:'#f57c00'},
+  {n:'Trade Finance',i:'💱',t:'laptop',c:'#1565c0'},
+  {n:'Insurance Platform',i:'🛡️',t:'laptop',c:'#1a237e'},
+  {n:'Fraud Detection',i:'🔍',t:'laptop',c:'#c62828'},
+  {n:'FinTech Platform',i:'💳',t:'laptop',c:'#388e3c'},
+  {n:'Payment Gateway',i:'💰',t:'laptop',c:'#2e7d32'},
+  {n:'Open Banking',i:'🏦',t:'laptop',c:'#1565c0'},
+  {n:'Wealth Management',i:'💎',t:'laptop',c:'#f57f17'},
+  {n:'Treasury Mgmt',i:'💰',t:'laptop',c:'#1b5e20'},
+  {n:'Trading Platform',i:'💹',t:'laptop',c:'#2e7d32'},
+  {n:'Algo Trading',i:'🤖',t:'laptop',c:'#1565c0'},
+  {n:'Market Data',i:'📡',t:'laptop',c:'#37474f'},
+  {n:'M&A Software',i:'🤝',t:'laptop',c:'#1a237e'},
+  {n:'Due Diligence',i:'🔍',t:'laptop',c:'#455a64'},
+  {n:'Cap Table Mgmt',i:'📊',t:'laptop',c:'#0277bd'},
+  {n:'Board Software',i:'📋',t:'laptop',c:'#37474f'},
+  {n:'Virtual Events',i:'🎪',t:'laptop',c:'#7b1fa2'},
+  {n:'Webinar Platform',i:'📹',t:'laptop',c:'#1565c0'},
+  {n:'Online Learning LMS',i:'🎓',t:'laptop',c:'#1a237e'},
+  {n:'Course Builder',i:'📚',t:'laptop',c:'#0277bd'},
+  {n:'Assessment Tools',i:'📝',t:'laptop',c:'#00695c'},
+  {n:'Talent Management',i:'⭐',t:'laptop',c:'#1565c0'},
+  {n:'Recruitment ATS',i:'👔',t:'laptop',c:'#1a237e'},
+  {n:'Onboarding Tools',i:'👋',t:'laptop',c:'#0277bd'},
+  {n:'Performance Review',i:'📊',t:'laptop',c:'#37474f'},
+  {n:'Payroll System 2',i:'💰',t:'laptop',c:'#2e7d32'},
+  {n:'Leave Management',i:'📅',t:'laptop',c:'#00695c'},
+  {n:'Workforce Planning',i:'📈',t:'laptop',c:'#1a237e'},
+  {n:'Learning Path',i:'🛤️',t:'laptop',c:'#0277bd'},
+  {n:'Mentoring Platform',i:'🤝',t:'laptop',c:'#37474f'},
+  {n:'Employee Wellness',i:'💚',t:'laptop',c:'#2e7d32'},
+  {n:'Remote Work Tools',i:'🏠',t:'laptop',c:'#0277bd'},
+  {n:'Virtual Office',i:'🏢',t:'laptop',c:'#1a237e'},
+  {n:'Whiteboard Pro',i:'✏️',t:'laptop',c:'#0277bd'},
+  {n:'Design System',i:'🎨',t:'laptop',c:'#e91e63'},
+  {n:'UI Component Lib',i:'🧩',t:'laptop',c:'#4527a0'},
+  {n:'Figma Plugins',i:'🖼️',t:'laptop',c:'#f24e1e'},
+  {n:'Prototyping Tools',i:'📱',t:'laptop',c:'#0277bd'},
+  {n:'UX Research',i:'🔍',t:'laptop',c:'#00695c'},
+  {n:'Accessibility Tools',i:'♿',t:'laptop',c:'#1a237e'},
+  {n:'Icon Libraries',i:'⭐',t:'laptop',c:'#f57f17'},
+  {n:'Font Management',i:'🔤',t:'laptop',c:'#4527a0'},
+  {n:'Brand Management',i:'🏷️',t:'laptop',c:'#0277bd'},
+  {n:'DAM Software',i:'💾',t:'laptop',c:'#37474f'},
+  {n:'Print Production',i:'🖨️',t:'laptop',c:'#455a64'},
+  {n:'Publishing Tools',i:'📚',t:'laptop',c:'#1a237e'},
+  {n:'Illustration Pro',i:'🖌️',t:'laptop',c:'#e91e63'},
+  {n:'Motion Graphics',i:'🎬',t:'laptop',c:'#7b1fa2'},
+  {n:'VFX Software',i:'✨',t:'laptop',c:'#0d47a1'},
+  {n:'Color Grading',i:'🎨',t:'laptop',c:'#880e4f'},
+  {n:'Subtitle Tools',i:'📝',t:'laptop',c:'#37474f'},
+  {n:'Podcast Production',i:'🎙️',t:'laptop',c:'#8e44ad'},
+  {n:'Live Streaming',i:'📡',t:'laptop',c:'#c62828'},
+  {n:'Screen Recording',i:'🖥️',t:'laptop',c:'#1565c0'},
+  {n:'Media Server',i:'🎬',t:'laptop',c:'#1a237e'},
+  {n:'CDN Tools',i:'🌐',t:'laptop',c:'#0277bd'},
+  {n:'Game Dev Tools',i:'🎮',t:'laptop',c:'#b71c1c'},
+  {n:'Level Design',i:'🗺️',t:'laptop',c:'#388e3c'},
+  {n:'Testing QA',i:'🧪',t:'laptop',c:'#0277bd'},
+  {n:'Load Testing',i:'⚡',t:'laptop',c:'#f57f17'},
+  {n:'Monitoring Tools',i:'📊',t:'laptop',c:'#1565c0'},
+  {n:'Log Management',i:'📋',t:'laptop',c:'#37474f'},
+  {n:'APM Software',i:'📈',t:'laptop',c:'#0277bd'},
+  {n:'Incident Mgmt',i:'🚨',t:'laptop',c:'#c62828'},
+  {n:'Chaos Engineering',i:'💥',t:'laptop',c:'#e91e63'},
+  {n:'API Gateway',i:'🔌',t:'laptop',c:'#0277bd'},
+  {n:'GraphQL Tools',i:'🔴',t:'laptop',c:'#e10098'},
+  {n:'Message Queue',i:'📨',t:'laptop',c:'#f57c00'},
+  {n:'Cache Tools',i:'⚡',t:'laptop',c:'#c62828'},
+  {n:'Search Platform',i:'🔍',t:'laptop',c:'#f04e98'},
+  {n:'Graph Database',i:'🕸️',t:'laptop',c:'#0277bd'},
+  {n:'Vector Database',i:'🧮',t:'laptop',c:'#4527a0'},
+  {n:'Object Storage',i:'💾',t:'laptop',c:'#ff6f00'},
+  {n:'Backup Solutions',i:'💾',t:'laptop',c:'#37474f'},
+  {n:'Disaster Recovery',i:'🔄',t:'laptop',c:'#c62828'},
+  {n:'Config Management',i:'⚙️',t:'laptop',c:'#37474f'},
+  {n:'Secret Management',i:'🔐',t:'laptop',c:'#212121'},
+  {n:'Identity Provider',i:'👤',t:'laptop',c:'#0277bd'},
+  {n:'SSO Tools',i:'🔑',t:'laptop',c:'#1565c0'},
+  {n:'Zero Trust',i:'🛡️',t:'laptop',c:'#1a237e'},
+  {n:'SIEM Platform',i:'🔍',t:'laptop',c:'#c62828'},
+  {n:'Threat Intel',i:'🎯',t:'laptop',c:'#b71c1c'},
+  {n:'Malware Analysis',i:'🦠',t:'laptop',c:'#d32f2f'},
+  {n:'SOC Tools',i:'🏢',t:'laptop',c:'#37474f'},
+  {n:'Collaboration Pro',i:'👥',t:'laptop',c:'#7b1fa2'},
+  {n:'Meeting Tools',i:'👥',t:'laptop',c:'#0277bd'},
+  {n:'Brainstorm Tools',i:'💡',t:'laptop',c:'#f57f17'},
+  {n:'Master Data Mgmt',i:'🗄️',t:'laptop',c:'#1565c0'},
+  {n:'Social Analytics',i:'👥',t:'laptop',c:'#e91e63'},
+  {n:'Usability Testing',i:'🧪',t:'laptop',c:'#1565c0'},
+  {n:'Robotics Dev',i:'🤖',t:'laptop',c:'#37474f'},
+  {n:'IoT Platform',i:'📡',t:'laptop',c:'#00695c'},
+  {n:'Engineering Tools',i:'🔧',t:'laptop',c:'#37474f'},
+  {n:'CAM Tools',i:'⚙️',t:'laptop',c:'#455a64'},
+  {n:'Fluid Dynamics',i:'🌊',t:'laptop',c:'#0277bd'},
+  {n:'Optimization Tools',i:'⚡',t:'laptop',c:'#f57f17'},
+  {n:'Risk Analysis',i:'⚖️',t:'laptop',c:'#c62828'},
+  {n:'Valuation Tools',i:'💰',t:'laptop',c:'#1565c0'},
+  {n:'Investor Portal',i:'📈',t:'laptop',c:'#2e7d32'},
+  {n:'RegTech',i:'✅',t:'laptop',c:'#0277bd'},
+  {n:'Anti-Money Laundering',i:'🔏',t:'laptop',c:'#1a237e'},
+  {n:'Fund Accounting',i:'📊',t:'laptop',c:'#1a237e'},
+  {n:'Derivatives Tools',i:'📈',t:'laptop',c:'#c62828'},
+  {n:'Equity Research',i:'🔍',t:'laptop',c:'#1a237e'},
+  {n:'Hedge Fund Tools',i:'🏦',t:'laptop',c:'#212121'},
+  {n:'Private Equity',i:'💼',t:'laptop',c:'#37474f'},
+  {n:'Venture Capital',i:'🚀',t:'laptop',c:'#7b1fa2'},
+  {n:'Field Service',i:'🔧',t:'laptop',c:'#bf360c'},
+  {n:'Facility Mgmt',i:'🏢',t:'laptop',c:'#455a64'},
+  {n:'Utilities Software',i:'🔧',t:'laptop',c:'#1565c0'},
+  {n:'Water Management',i:'💧',t:'laptop',c:'#0288d1'},
+  {n:'Livestock Mgmt',i:'🐄',t:'laptop',c:'#795548'},
+  {n:'Food Safety',i:'✅',t:'laptop',c:'#2e7d32'},
+  {n:'Certification Mgmt',i:'🏆',t:'laptop',c:'#f57f17'},
+  {n:'Employee Survey',i:'📝',t:'laptop',c:'#2e7d32'},
+  {n:'Benefits Admin',i:'💊',t:'laptop',c:'#1565c0'},
+  {n:'Time & Attendance',i:'⏱️',t:'laptop',c:'#0277bd'},
+  {n:'Succession Plan',i:'📊',t:'laptop',c:'#7b1fa2'},
+  {n:'Culture Tools',i:'🌟',t:'laptop',c:'#f57f17'},
+  {n:'Org Chart Tools',i:'📊',t:'laptop',c:'#1565c0'},
+  {n:'Citation Manager',i:'📚',t:'laptop',c:'#4527a0'},
+  {n:'Linear Programming',i:'📈',t:'laptop',c:'#1a237e'},
+  {n:'Remote Sensing',i:'🛰️',t:'laptop',c:'#1a237e'},
+  {n:'Computer Algebra',i:'➕',t:'laptop',c:'#c62828'},
 ];
 
-// APP NAME GENERATORS
-const APP_PREFIXES = ['Nova','Apex','Zen','Flux','Neon','Spark','Echo','Pulse','Volt','Grid','Arc','Shift','Hyper','Ultra','Mega','Super','Proto','Alpha','Beta','Gamma','Delta','Sigma','Prime','Core','Edge','Peak','Zeta','Vibe','Flow','Glow','Sync','Link','Hub','Node','Byte','Pixel','Wave','Beam','Boost','Dash','Flash','Rush','Surge','Storm','Blaze'];
-const APP_SUFFIXES = ['Pro','X','AI','Go','App','Hub','Plus','Max','One','Now','Live','Fast','Smart','Lite','Neo','OS','Ui','Kit','Lab','Pad','Deck','Box','Flex','Zen','Flow','Sync','Link','Base','Cloud','Net'];
-const APP_ICONS_LIST = ['🚀','⚡','🌟','💎','🔮','🎯','🌊','🔥','❄️','🌈','💡','🎨','🎮','🎵','🎬','📊','🔐','🌐','💰','🏆','🤖','✨','🦋','🐉','🎭','🎪','🔬','🧬','⚛️','🌙','☀️','🌴','🏔️','🦁','🐋','🦅','🌺','🍀','⚓','🎸','🎹','🥁','🎺','🎻','🪗','🎷','🏹','🗡️','🛡️','⚔️','🧿','🔱','☯️','⚜️','🌀','💠','🔷','🔶','🔴','🟢','🟣','🟡'];
+// ── GENERATORS ─────────────────────────────────────────
+const PFX=['Nova','Apex','Zen','Flux','Neon','Spark','Echo','Pulse','Volt','Grid','Arc','Shift','Hyper','Ultra','Mega','Proto','Alpha','Beta','Sigma','Prime','Core','Edge','Peak','Zeta','Vibe','Flow','Glow','Sync','Link','Hub','Byte','Pixel','Wave','Beam','Boost','Dash','Flash','Rush','Surge','Storm','Blaze','Swift','Snap','Bold','Fuse'];
+const SFX=['Pro','X','AI','Go','App','Hub','Plus','Max','One','Now','Live','Fast','Smart','Lite','Neo','OS','Kit','Lab','Pad','Deck','Box','Flex','Zen','Flow','Sync','Link','Base','Cloud','Net','Desk'];
+const ICONS=['🚀','⚡','🌟','💎','🔮','🎯','🌊','🔥','❄️','🌈','💡','🎨','🎮','🎵','🎬','📊','🔐','🌐','💰','🏆','🤖','✨','🦋','🐉','🎭','🎪','🔬','🧬','⚛️','🌙','☀️','🌴','🏔️','🦁','🐋','🦅','🌺','🍀','⚓','🎸','🎹','🥁','🎺','🎻','🏹','🗡️','🛡️','⚔️','🧿','🔱','⚜️','🌀','💠','🔷','🔶'];
+const TYPES=['Free','Premium','Freemium','Open Source','Enterprise','Beta'];
+const TAGLINES=['The future is here','Smarter & faster','Built for you','Where innovation lives','Power meets simplicity','Your universe, simplified','Unlock your potential','Beyond boundaries','The ultimate tool','Next-gen experience'];
+const FEATS=['AI-powered recommendations','Real-time sync across devices','End-to-end encryption','Offline mode','Advanced analytics','One-tap cloud backup','Multi-user collaboration','Dark mode support','Voice command ready','Biometric auth','Automated workflows','Third-party integrations','Smart notifications','Widget support','Export to any format','Priority 24/7 support','Gesture navigation','AR-enhanced UI','ML personalization','Battery optimized'];
 
-function genAppName() {
-  const p = APP_PREFIXES[Math.floor(Math.random()*APP_PREFIXES.length)];
-  const s = APP_SUFFIXES[Math.floor(Math.random()*APP_SUFFIXES.length)];
-  return Math.random()>0.5 ? p+' '+s : p+s;
-}
-function genIcon() {
-  return APP_ICONS_LIST[Math.floor(Math.random()*APP_ICONS_LIST.length)];
-}
-function genStars() {
-  const r = (3.5 + Math.random()*1.5).toFixed(1);
-  return '★'.repeat(Math.floor(r)) + (r%1?'½':'') + ' '+r;
-}
-function genType() {
-  return APP_TYPES[Math.floor(Math.random()*APP_TYPES.length)];
-}
-function genGradient(color) {
-  const h2 = Math.floor(Math.random()*360);
-  return `linear-gradient(135deg, ${color}, hsl(${h2},70%,35%))`;
-}
-function genTagline(appName) {
-  const taglines = [
-    `The future of ${appName} is here`,
-    `Smarter, faster, better`,
-    `Redefining the experience`,
-    `Built for the next generation`,
-    `Where innovation meets design`,
-    `Power meets simplicity`,
-    `Your universe, simplified`,
-    `Unlock your potential`,
-    `Beyond boundaries`,
-    `The ultimate solution`
-  ];
-  return taglines[Math.floor(Math.random()*taglines.length)];
-}
-function genFeatures() {
-  const features = [
-    'AI-powered smart recommendations',
-    'Real-time sync across all devices',
-    'End-to-end encrypted data',
-    'Offline mode with smart caching',
-    'Advanced analytics dashboard',
-    'One-tap cloud backup',
-    'Collaborative multi-user workspace',
-    'Custom themes and dark mode',
-    'Voice command integration',
-    'Biometric authentication support',
-    'Automated workflow builder',
-    'Third-party app integrations',
-    'Smart notification manager',
-    'Battery optimization mode',
-    'Export to multiple formats',
-    'Priority customer support 24/7',
-    'Widget and shortcut support',
-    'Gesture-based navigation',
-    'AR-enhanced interface',
-    'Machine learning personalization'
-  ];
-  const count = 4 + Math.floor(Math.random()*3);
-  return [...features].sort(()=>Math.random()-0.5).slice(0,count);
-}
-function genStats() {
-  return [
-    {num: (Math.random()*50+1).toFixed(1)+'M', label:'Downloads'},
-    {num: (3.5+Math.random()*1.4).toFixed(1)+'★', label:'Rating'},
-    {num: (Math.random()*200+10).toFixed(0)+'MB', label:'Size'}
-  ];
+let seed=42;
+function rng(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296}
+function pick(arr){return arr[Math.floor(rng()*arr.length)];}
+function appName(){return Math.random()>.5?pick(PFX)+' '+pick(SFX):pick(PFX)+pick(SFX);}
+function stars(){const r=(3.5+rng()*1.4).toFixed(1);return'★'+r;}
+function grad(c){const h=Math.floor(rng()*360);return`linear-gradient(135deg,${c},hsl(${h},65%,30%))`;}
+
+// ── STATE ──────────────────────────────────────────────
+let filter='all', searchQ='', visibleCats=[], loadedCount=0;
+const BATCH=8; // load 8 categories at a time
+
+// ── FILTER & SEARCH ───────────────────────────────────
+function getVisible(){
+  const q=searchQ.toLowerCase();
+  return CATS.filter((c,i)=>{
+    if(filter!=='all'&&c.t!==filter)return false;
+    if(q&&!c.n.toLowerCase().includes(q))return false;
+    return true;
+  });
 }
 
-// ===== RENDER ENGINE =====
-let activeFilter = 'all';
-let allSections = [];
+// ── RENDER ONE CATEGORY ───────────────────────────────
+function renderCat(cat,idx,globalIdx){
+  seed=globalIdx*31+7; // deterministic per category
+  const block=document.createElement('div');
+  block.className='cat-block';
+  block.dataset.type=cat.t;
 
-function buildAppsGrid(catIndex, cat) {
-  const apps = [];
-  for(let i=0; i<42; i++) {
-    const name = genAppName();
-    const icon = genIcon();
-    const stars = genStars();
-    const type = genType();
-    apps.push({name,icon,stars,type,catIndex,appIndex:i,cat});
-  }
-  return apps;
-}
+  const isMob=cat.t==='mobile';
+  const badgeCls=isMob?'bm':'bl';
+  const badgeTxt=isMob?'📱 MOBILE':'💻 LAPTOP';
+  const g=grad(cat.c);
 
-function renderCategories(filter='all') {
-  const main = document.getElementById('mainContent');
-  main.innerHTML = '';
-  const frag = document.createDocumentFragment();
-
-  const filtered = CATEGORIES.filter(c => filter==='all' || c.type===filter);
-
-  filtered.forEach((cat, i) => {
-    const sec = document.createElement('div');
-    sec.className = 'category-section';
-    sec.style.animationDelay = `${(i%20)*0.03}s`;
-    sec.dataset.catType = cat.type;
-
-    const badgeClass = cat.type==='mobile'?'badge-mobile':cat.type==='laptop'?'badge-laptop':'badge-both';
-    const badgeText = cat.type==='mobile'?'📱 MOBILE':cat.type==='laptop'?'💻 LAPTOP':'⚡ BOTH';
-
-    sec.innerHTML = `
-      <div class="category-header">
-        <div class="cat-icon" style="background:${genGradient(cat.color)}">
-          <div class="pulse-ring"></div>
-          ${cat.icon}
-        </div>
-        <div class="cat-info">
-          <div class="section-num">CAT — ${String(i+1).padStart(3,'0')}</div>
-          <div class="cat-name" style="color:${cat.color}">${cat.name}</div>
-          <div class="cat-meta">42 apps • ${cat.type.toUpperCase()} CATEGORY</div>
-        </div>
-        <span class="cat-badge ${badgeClass}">${badgeText}</span>
+  block.innerHTML=`
+    <div class="cat-head">
+      <div class="cat-ico" style="background:${g}">${cat.i}</div>
+      <div class="cat-info">
+        <div class="cat-num">CAT — ${String(globalIdx+1).padStart(3,'0')}</div>
+        <div class="cat-name" style="color:${cat.c}">${cat.n}</div>
+        <div class="cat-sub">42 apps · ${cat.t.toUpperCase()}</div>
       </div>
-      <div class="apps-grid" id="grid-${i}"></div>
-    `;
-    frag.appendChild(sec);
-
-    // Build apps
-    const apps = buildAppsGrid(i, cat);
-    setTimeout(() => {
-      const grid = document.getElementById(`grid-${i}`);
-      if(!grid) return;
-      apps.forEach((app, ai) => {
-        const card = document.createElement('div');
-        card.className = 'app-card';
-        card.style.animationDelay = `${ai*0.02}s`;
-        card.style.setProperty('--card-color', cat.color);
-        card.innerHTML = `
-          <div class="app-icon-wrap" style="background:${genGradient(cat.color)}">${app.icon}</div>
-          <div class="app-name">${app.name}</div>
-          <div class="app-type">${app.type}</div>
-          <div class="app-stars">${app.stars}</div>
-        `;
-        card.addEventListener('click', () => openModal(app, cat));
-        grid.appendChild(card);
-      });
-    }, i * 5);
-  });
-
-  main.appendChild(frag);
-}
-
-function openModal(app, cat) {
-  const overlay = document.getElementById('modalOverlay');
-  const header = document.getElementById('appHomeHeader');
-  const icon = document.getElementById('homeIcon');
-  const name = document.getElementById('homeName');
-  const tagline = document.getElementById('homeTagline');
-  const stats = document.getElementById('homeStats');
-  const features = document.getElementById('homeFeatures');
-
-  const grad = genGradient(cat.color);
-  header.style.background = grad;
-  header.style.backgroundSize = '200% 200%';
-  icon.style.background = 'rgba(0,0,0,0.3)';
-  icon.style.backdropFilter = 'blur(10px)';
-  icon.innerHTML = app.icon;
-  name.textContent = app.name;
-  tagline.textContent = genTagline(app.name);
-
-  const statData = genStats();
-  stats.innerHTML = statData.map(s=>`
-    <div class="home-stat">
-      <div class="home-stat-num">${s.num}</div>
-      <div class="home-stat-label">${s.label}</div>
+      <span class="cat-badge ${badgeCls}">${badgeTxt}</span>
     </div>
-  `).join('');
+    <div class="apps-grid" id="ag${globalIdx}"></div>`;
 
-  const feats = genFeatures();
-  features.innerHTML = feats.map((f,i)=>`
-    <div class="feature-item" style="animation-delay:${i*0.1}s">
-      <div class="feature-dot" style="background:${cat.color}"></div>
-      <div class="feature-text">${f}</div>
-    </div>
-  `).join('');
+  // Build 42 app cards efficiently
+  const grid=block.querySelector(`#ag${globalIdx}`);
+  const frag=document.createDocumentFragment();
+  for(let i=0;i<42;i++){
+    seed=globalIdx*1000+i*17+3;
+    const name=appName();
+    const icon=pick(ICONS);
+    const type=pick(TYPES);
+    const st=stars();
+    const igrad=grad(cat.c);
 
-  overlay.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
+    const card=document.createElement('div');
+    card.className='app-card';
+    card.innerHTML=`<div class="a-icon" style="background:${igrad}">${icon}</div>
+      <div class="a-name">${name}</div>
+      <div class="a-type">${type}</div>
+      <div class="a-stars">${st}</div>`;
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if(e.target === this) closeModal();
-});
-
-function setFilter(filter, btn) {
-  activeFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderCategories(filter);
-}
-
-function filterApps(query) {
-  const q = query.toLowerCase();
-  document.querySelectorAll('.category-section').forEach(sec => {
-    const name = sec.querySelector('.cat-name')?.textContent.toLowerCase()||'';
-    const cards = sec.querySelectorAll('.app-card');
-    let visible = 0;
-    cards.forEach(card => {
-      const appName = card.querySelector('.app-name')?.textContent.toLowerCase()||'';
-      const show = !q || name.includes(q) || appName.includes(q);
-      card.style.display = show ? '' : 'none';
-      if(show) visible++;
-    });
-    sec.style.display = (!q || name.includes(q) || visible>0) ? '' : 'none';
-  });
-}
-
-// ===== PARTICLES =====
-function initParticles() {
-  const canvas = document.getElementById('particles');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles;
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+    card.addEventListener('click',()=>openModal(name,icon,cat,igrad),{passive:true});
+    frag.appendChild(card);
   }
-  resize();
-  window.addEventListener('resize', resize);
+  grid.appendChild(frag);
+  return block;
+}
 
-  function Particle() {
-    this.reset = function() {
-      this.x = Math.random()*W;
-      this.y = Math.random()*H;
-      this.vx = (Math.random()-0.5)*0.5;
-      this.vy = (Math.random()-0.5)*0.5;
-      this.r = Math.random()*2+0.5;
-      this.life = Math.random();
-      this.color = Math.random()>0.5?'rgba(0,245,255,':'rgba(255,0,110,';
-    };
-    this.reset();
+// ── VIRTUAL / LAZY RENDER ─────────────────────────────
+let renderTimer=null;
+function buildList(){
+  const root=document.getElementById('root');
+  root.innerHTML='';
+  loadedCount=0;
+  visibleCats=getVisible();
+  document.getElementById('countSpan').textContent=visibleCats.length;
+
+  if(!visibleCats.length){
+    root.innerHTML='<div class="no-res">No results found 🔍</div>';
+    return;
   }
+  loadMore();
+}
 
-  particles = Array.from({length:80},()=>new Particle());
+function loadMore(){
+  const root=document.getElementById('root');
+  const end=Math.min(loadedCount+BATCH,visibleCats.length);
+  const frag=document.createDocumentFragment();
+  for(let i=loadedCount;i<end;i++){
+    const origIdx=CATS.indexOf(visibleCats[i]);
+    frag.appendChild(renderCat(visibleCats[i],i,origIdx));
+  }
+  root.appendChild(frag);
+  loadedCount=end;
+}
 
-  function draw() {
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      p.life += 0.005;
-      if(p.x<0||p.x>W||p.y<0||p.y>H||p.life>1) p.reset();
-      const alpha = Math.sin(p.life*Math.PI)*0.6;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle = p.color+alpha+')';
-      ctx.fill();
-    });
+// IntersectionObserver sentinel for infinite scroll
+let sentinel=null;
+function setupSentinel(){
+  if(sentinel){sentinel.remove();sentinel=null;}
+  sentinel=document.createElement('div');
+  sentinel.style.height='20px';
+  document.getElementById('root').appendChild(sentinel);
 
-    // Draw connections
-    particles.forEach((p,i) => {
-      particles.slice(i+1).forEach(p2 => {
-        const dist = Math.hypot(p.x-p2.x, p.y-p2.y);
-        if(dist<120) {
-          ctx.beginPath();
-          ctx.moveTo(p.x,p.y);
-          ctx.lineTo(p2.x,p2.y);
-          ctx.strokeStyle = `rgba(0,245,255,${0.1*(1-dist/120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting&&loadedCount<visibleCats.length){
+      // Load next batch when near bottom
+      requestAnimationFrame(()=>{
+        loadMore();
+        if(loadedCount>=visibleCats.length){obs.disconnect();}
       });
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
+    }
+  },{rootMargin:'300px'});
+  obs.observe(sentinel);
 }
 
-// ===== CURSOR =====
-function initCursor() {
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
+// ── SEARCH ────────────────────────────────────────────
+let searchTimer=null;
+document.getElementById('searchIn').addEventListener('input',function(){
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>{
+    searchQ=this.value.trim();
+    buildList();
+    setupSentinel();
+  },250);
+});
 
-  document.addEventListener('mousemove', e => {
-    mx=e.clientX; my=e.clientY;
-    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+// ── FILTERS ──────────────────────────────────────────
+document.querySelectorAll('.fbtn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
+    filter=this.dataset.f;
+    buildList();
+    setupSentinel();
   });
+});
 
-  function animRing() {
-    rx += (mx-rx)*0.12;
-    ry += (my-ry)*0.12;
-    ring.style.left=rx+'px'; ring.style.top=ry+'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
+// ── MODAL ─────────────────────────────────────────────
+function openModal(name,icon,cat,igrad){
+  const ov=document.getElementById('overlay');
+  const head=document.getElementById('mHead');
+  head.style.background=igrad;
+  head.style.backgroundSize='200% 200%';
+  document.getElementById('mIco').textContent=icon;
+  document.getElementById('mName').textContent=name;
+  document.getElementById('mTag').textContent=pick(TAGLINES);
 
-  document.addEventListener('mousedown', () => {
-    cursor.style.transform='translate(-50%,-50%) scale(0.5)';
-    ring.style.width='60px'; ring.style.height='60px';
-  });
-  document.addEventListener('mouseup', () => {
-    cursor.style.transform='translate(-50%,-50%) scale(1)';
-    ring.style.width='36px'; ring.style.height='36px';
-  });
+  const sData=[
+    {n:(Math.random()*50+1).toFixed(1)+'M',l:'Downloads'},
+    {n:(3.5+Math.random()*1.4).toFixed(1)+'★',l:'Rating'},
+    {n:(Math.random()*200+10).toFixed(0)+'MB',l:'Size'}
+  ];
+  document.getElementById('mStats').innerHTML=sData.map(s=>
+    `<div class="m-stat"><div class="m-stat-n">${s.n}</div><div class="m-stat-l">${s.l}</div></div>`
+  ).join('');
+
+  const feats=[...FEATS].sort(()=>Math.random()-.5).slice(0,5);
+  document.getElementById('mFeats').innerHTML=feats.map((f,i)=>
+    `<div class="m-feat" style="animation-delay:${i*.08}s">
+      <div class="m-dot" style="background:${cat.c}"></div>
+      <span>${f}</span>
+    </div>`
+  ).join('');
+
+  ov.classList.add('show');
+  document.body.style.overflow='hidden';
 }
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-// ===== SCROLL =====
-window.addEventListener('scroll', () => {
-  const btn = document.getElementById('scrollTop');
-  btn.classList.toggle('show', window.scrollY>300);
-});
+// ── SCROLL TOP ────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('stBtn').classList.toggle('show',window.scrollY>400);
+},{passive:true});
 
-// ===== INIT =====
-window.addEventListener('DOMContentLoaded', () => {
-  initParticles();
-  initCursor();
-  renderCategories('all');
-
-  // Hide loading
-  setTimeout(() => {
-    document.getElementById('loadingScreen').classList.add('hide');
-  }, 1800);
-
-  // Keyboard
-  document.addEventListener('keydown', e => {
-    if(e.key==='Escape') closeModal();
-  });
-});
+// ── INIT ─────────────────────────────────────────────
+buildList();
+setupSentinel();
 </script>
 </body>
 </html>
